@@ -374,8 +374,8 @@ export const pt = {
         { label: "IRA, causas, frequência e custos", kind: "derived" },
       ],
     },
-    switchV1: "v1 · Avarias",
-    switchV2: "v2 · Inventário",
+    goInventory: "Inventário",
+    goDamage: "Avarias",
   },
   onePager: {
     title: "Resumo de 1 página",

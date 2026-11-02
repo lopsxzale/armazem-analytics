@@ -7,7 +7,7 @@ import { lockScroll, scrollToId } from "@/lib/lenis";
 import { Logo } from "./logo";
 import { useI18n } from "./providers";
 
-const SECTIONS = ["summary", "real", "pareto", "packaging", "monthly", "trend", "abc", "robust", "simulator", "method"] as const;
+const SECTIONS = ["real", "pareto", "packaging", "monthly", "trend", "abc", "robust", "simulator", "method"] as const;
 
 function useActiveSection(sections: readonly string[]) {
   const [active, setActive] = useState<string>("");
@@ -121,30 +121,14 @@ export function Header({
           <button
             onClick={() => go("top")}
             aria-label={t.brand}
-            className="flex items-center gap-2 text-sm font-semibold tracking-tight text-ink"
+            className="flex shrink-0 items-center gap-2 whitespace-nowrap text-sm font-semibold tracking-tight text-ink"
           >
             <Logo />
             <span className="hidden sm:inline">{t.brand}</span>
           </button>
 
-          {/* Troca de página: v1 (avarias) e v2 (inventário) */}
-          <div className="hidden items-center rounded-full bg-surface-2 p-1 text-xs md:flex">
-            {(["v1", "v2"] as const).map((v) => (
-              <Link
-                key={v}
-                href={v === "v1" ? `/${lang}/` : `/${lang}/inventario/`}
-                aria-current={page === v ? "page" : undefined}
-                className={`rounded-full px-3 py-1 font-medium transition ${
-                  page === v ? "bg-surface text-ink shadow-sm ring-1 ring-line" : "text-muted hover:text-ink"
-                }`}
-              >
-                {v === "v1" ? t.inv.switchV1 : t.inv.switchV2}
-              </Link>
-            ))}
-          </div>
-
           <nav aria-label="Seções" className="ml-auto hidden 2xl:block">
-            <ul className="flex items-center gap-1 text-sm">
+            <ul className="flex items-center text-sm">
               {sections.map((id) => (
                 <li key={id}>
                   <a
@@ -154,7 +138,7 @@ export function Header({
                       go(id);
                     }}
                     aria-current={active === id ? "true" : undefined}
-                    className={`relative rounded-full px-2.5 py-1.5 transition-colors ${
+                    className={`relative whitespace-nowrap rounded-full px-2.5 py-1.5 transition-colors ${
                       active === id ? "text-ink" : "text-muted hover:text-ink"
                     }`}
                   >
@@ -172,7 +156,14 @@ export function Header({
             </ul>
           </nav>
 
-          <div className="ml-auto flex items-center gap-1 2xl:ml-2">
+          <div className="ml-auto flex shrink-0 items-center gap-1 2xl:ml-2">
+            {/* Link para a outra página do projeto (avarias <-> inventário) */}
+            <Link
+              href={page === "v1" ? `/${lang}/inventario/` : `/${lang}/`}
+              className="mr-1 hidden whitespace-nowrap rounded-full px-3 py-1.5 text-sm font-medium text-ink-2 ring-1 ring-line transition hover:bg-surface-2 hover:text-ink sm:inline-flex"
+            >
+              {page === "v1" ? `${t.inv.goInventory} →` : `← ${t.inv.goDamage}`}
+            </Link>
             <Link
               href={`/${otherLang}/${subpath}`}
               hrefLang={otherLang}
@@ -226,17 +217,12 @@ export function Header({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <div className="mb-6 flex gap-2 text-sm">
-              {(["v1", "v2"] as const).map((v) => (
-                <Link
-                  key={v}
-                  href={v === "v1" ? `/${lang}/` : `/${lang}/inventario/`}
-                  className={`rounded-full px-3 py-1.5 font-medium ring-1 ring-line ${page === v ? "bg-surface-2 text-ink" : "text-muted"}`}
-                >
-                  {v === "v1" ? t.inv.switchV1 : t.inv.switchV2}
-                </Link>
-              ))}
-            </div>
+            <Link
+              href={page === "v1" ? `/${lang}/inventario/` : `/${lang}/`}
+              className="mb-6 inline-flex rounded-full px-4 py-2 text-sm font-medium text-ink ring-1 ring-line"
+            >
+              {page === "v1" ? `${t.inv.goInventory} →` : `← ${t.inv.goDamage}`}
+            </Link>
             <ul className="space-y-1">
               {sections.map((id, i) => (
                 <motion.li

@@ -375,8 +375,8 @@ export const en: Dictionary = {
         { label: "IRA, causes, frequency and costs", kind: "derived" },
       ],
     },
-    switchV1: "v1 · Damage",
-    switchV2: "v2 · Inventory",
+    goInventory: "Inventory",
+    goDamage: "Damage",
   },
   onePager: {
     title: "One-page summary",
