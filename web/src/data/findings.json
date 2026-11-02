@@ -24,7 +24,10 @@
   "long_neck_taxa_pct": 1.1621,
   "lata_taxa_pct": 0.4916,
   "separacao_var_pct": 30.78,
-  "outras_var_media_pct": -11.15
+  "outras_var_media_pct": -11.15,
+  "separacao_var_ajustada_pct": 45.68,
+  "outras_var_ajustada_media_pct": -1.14,
+  "tendencia_plantada_pct": 45.0
  },
  "acoes": {
   "reducao_pct": 30,

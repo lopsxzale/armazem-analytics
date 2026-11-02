@@ -1,0 +1,169 @@
+{
+ "mix": [
+  {
+   "ano": 2017,
+   "embalagem_id": "barril",
+   "caixas_movimentadas": 39225.0,
+   "pct": 1.8
+  },
+  {
+   "ano": 2017,
+   "embalagem_id": "lata",
+   "caixas_movimentadas": 834158.0,
+   "pct": 38.19
+  },
+  {
+   "ano": 2017,
+   "embalagem_id": "long_neck",
+   "caixas_movimentadas": 1163117.0,
+   "pct": 53.25
+  },
+  {
+   "ano": 2017,
+   "embalagem_id": "outras",
+   "caixas_movimentadas": 147893.0,
+   "pct": 6.77
+  },
+  {
+   "ano": 2018,
+   "embalagem_id": "barril",
+   "caixas_movimentadas": 9847.0,
+   "pct": 2.08
+  },
+  {
+   "ano": 2018,
+   "embalagem_id": "lata",
+   "caixas_movimentadas": 184110.0,
+   "pct": 38.86
+  },
+  {
+   "ano": 2018,
+   "embalagem_id": "long_neck",
+   "caixas_movimentadas": 249337.0,
+   "pct": 52.62
+  },
+  {
+   "ano": 2018,
+   "embalagem_id": "outras",
+   "caixas_movimentadas": 30543.0,
+   "pct": 6.45
+  },
+  {
+   "ano": 2019,
+   "embalagem_id": "barril",
+   "caixas_movimentadas": 57457.0,
+   "pct": 1.75
+  },
+  {
+   "ano": 2019,
+   "embalagem_id": "lata",
+   "caixas_movimentadas": 1347826.0,
+   "pct": 41.11
+  },
+  {
+   "ano": 2019,
+   "embalagem_id": "long_neck",
+   "caixas_movimentadas": 1689255.0,
+   "pct": 51.52
+  },
+  {
+   "ano": 2019,
+   "embalagem_id": "outras",
+   "caixas_movimentadas": 184061.0,
+   "pct": 5.61
+  },
+  {
+   "ano": 2020,
+   "embalagem_id": "barril",
+   "caixas_movimentadas": 12761.0,
+   "pct": 1.0
+  },
+  {
+   "ano": 2020,
+   "embalagem_id": "lata",
+   "caixas_movimentadas": 570801.0,
+   "pct": 44.71
+  },
+  {
+   "ano": 2020,
+   "embalagem_id": "long_neck",
+   "caixas_movimentadas": 630355.0,
+   "pct": 49.38
+  },
+  {
+   "ano": 2020,
+   "embalagem_id": "outras",
+   "caixas_movimentadas": 62701.0,
+   "pct": 4.91
+  },
+  {
+   "ano": 2026,
+   "embalagem_id": "barril",
+   "caixas_movimentadas": 11374.0,
+   "pct": 1.4
+  },
+  {
+   "ano": 2026,
+   "embalagem_id": "lata",
+   "caixas_movimentadas": 437454.0,
+   "pct": 53.77
+  },
+  {
+   "ano": 2026,
+   "embalagem_id": "long_neck",
+   "caixas_movimentadas": 331595.0,
+   "pct": 40.76
+  },
+  {
+   "ano": 2026,
+   "embalagem_id": "outras",
+   "caixas_movimentadas": 33159.0,
+   "pct": 4.08
+  }
+ ],
+ "ano_inicio": 2017,
+ "ano_fim": 2026,
+ "lata_inicio_pct": 38.19,
+ "lata_fim_pct": 53.77,
+ "long_neck_inicio_pct": 53.25,
+ "long_neck_fim_pct": 40.76,
+ "estornos": [
+  {
+   "embalagem_id": "barril",
+   "caixas_devolvidas": 199.0,
+   "caixas_movimentadas": 130664.0,
+   "taxa_pct": 0.1523,
+   "meses_com_estorno": 26,
+   "itens_com_estorno": 123
+  },
+  {
+   "embalagem_id": "long_neck",
+   "caixas_devolvidas": 597.8,
+   "caixas_movimentadas": 4063659.0,
+   "taxa_pct": 0.0147,
+   "meses_com_estorno": 23,
+   "itens_com_estorno": 65
+  },
+  {
+   "embalagem_id": "lata",
+   "caixas_devolvidas": 265.4,
+   "caixas_movimentadas": 3374349.0,
+   "taxa_pct": 0.0079,
+   "meses_com_estorno": 19,
+   "itens_com_estorno": 37
+  },
+  {
+   "embalagem_id": "outras",
+   "caixas_devolvidas": 12.8,
+   "caixas_movimentadas": 458357.0,
+   "taxa_pct": 0.0028,
+   "meses_com_estorno": 9,
+   "itens_com_estorno": 12
+  }
+ ],
+ "estornos_total": 1075.0,
+ "estornos_taxa_pct": 0.0134,
+ "itens_a": 233,
+ "itens_total": 9537,
+ "pct_volume_a": 79.97
+}

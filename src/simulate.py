@@ -39,15 +39,27 @@ def pesos_motivo(etapa: str, embalagem: str) -> np.ndarray:
     return w / w.sum()
 
 
-def fator_tendencia(periodos: pd.Series, etapa: str) -> np.ndarray:
-    """1,0 no primeiro mês do período e TENDENCIA_ETAPA[etapa] no último (linear no tempo)."""
-    fim = ref.TENDENCIA_ETAPA.get(etapa, 1.0)
+def premissas_padrao() -> dict:
+    """Premissas de src/referencias.py num dict que a análise de sensibilidade pode variar."""
+    return {
+        "taxa_base": ref.TAXA_BASE_AVARIA,
+        "mult_avaria": {k: v["mult_avaria"] for k, v in ref.EMBALAGENS.items()},
+        "participacao": {k: v["participacao"] for k, v in ref.ETAPAS.items()},
+        "tendencia": dict(ref.TENDENCIA_ETAPA),
+    }
+
+
+def fator_tendencia(periodos: pd.Series, fim: float) -> np.ndarray:
+    """1,0 no primeiro mês do período e `fim` no último (linear no tempo)."""
     datas = pd.to_datetime(periodos)
     t = (datas - datas.min()) / (datas.max() - datas.min())
     return 1.0 + (fim - 1.0) * t.to_numpy(dtype=float)
 
 
-def simular(mov: pd.DataFrame, itens: pd.DataFrame, seed: int = ref.SEED) -> pd.DataFrame:
+def simular(
+    mov: pd.DataFrame, itens: pd.DataFrame, seed: int = ref.SEED, premissas: dict | None = None
+) -> pd.DataFrame:
+    p = premissas or premissas_padrao()
     rng = np.random.default_rng(seed)
     itens = itens.sort_values("item_code").reset_index(drop=True)
     fragilidade = rng.lognormal(-(SIGMA_ITEM**2) / 2, SIGMA_ITEM, len(itens))
@@ -56,18 +68,18 @@ def simular(mov: pd.DataFrame, itens: pd.DataFrame, seed: int = ref.SEED) -> pd.
     base = mov[mov["caixas_movimentadas"] > 0].merge(
         itens[["item_code", "embalagem_id", "fragilidade"]], on="item_code", how="left"
     )
-    mult = base["embalagem_id"].map({k: v["mult_avaria"] for k, v in ref.EMBALAGENS.items()}).to_numpy()
+    mult = base["embalagem_id"].map(p["mult_avaria"]).to_numpy()
     motivos = list(ref.MOTIVOS)
 
     partes = []
-    for etapa, info in ref.ETAPAS.items():
+    for etapa in ref.ETAPAS:
         lam = (
             base["caixas_movimentadas"].to_numpy()
-            * ref.TAXA_BASE_AVARIA
-            * info["participacao"]
+            * p["taxa_base"]
+            * p["participacao"][etapa]
             * mult
             * base["fragilidade"].to_numpy()
-            * fator_tendencia(base["periodo"], etapa)
+            * fator_tendencia(base["periodo"], p["tendencia"].get(etapa, 1.0))
         )
         caixas = rng.poisson(lam)
         tem = caixas > 0

@@ -7,11 +7,14 @@ import { useState } from "react";
 import { STAGES, trend, type Stage } from "@/lib/data";
 import { stageLabel } from "@/lib/labels";
 import { useWidth } from "@/lib/use-size";
-import { ChartFrame, ChartTooltip, TooltipRow } from "../chart-frame";
+import { ChartFrame, ChartTooltip, Segmented, TooltipRow } from "../chart-frame";
 import { useChartInView } from "../motion";
 import { useI18n } from "../providers";
 
 const FOCUS: Stage = "separacao";
+type Mode = "adjusted" | "raw";
+const FIELD = { raw: "var_vs_inicio_pct", adjusted: "var_ajustada_vs_inicio_pct" } as const;
+const RATE = { raw: "taxa_pct", adjusted: "taxa_ajustada_pct" } as const;
 const color = (s: Stage) => (s === FOCUS ? "var(--series-focus)" : "var(--series-rest)");
 
 export function TrendChart() {
@@ -19,11 +22,14 @@ export function TrendChart() {
   const [box, width] = useWidth<HTMLDivElement>();
   const [ref, inView] = useChartInView<SVGSVGElement>();
   const [hover, setHover] = useState<string | null>(null);
+  const [mode, setMode] = useState<Mode>("adjusted");
+  const val = (d: (typeof trend.series)[number]) => d[FIELD[mode]];
   const windows = trend.janelas.map((j) => j.id);
   const narrow = width < 560;
   const height = 320;
   const M = { top: 20, right: narrow ? 16 : 120, bottom: 40, left: 48 };
-  const values = trend.series.map((s) => s.var_vs_inicio_pct);
+  // Eixo fixo para os dois modos: a troca bruta/ajustada mostra as linhas se movendo, não a escala.
+  const values = trend.series.flatMap((s) => [s.var_vs_inicio_pct, s.var_ajustada_vs_inicio_pct]);
   const x = scalePoint<string>().domain(windows).range([M.left, width - M.right]).padding(0.2);
   const y = scaleLinear()
     .domain([Math.min(-20, ...values), Math.max(...values) + 5])
@@ -32,14 +38,14 @@ export function TrendChart() {
   const series = (s: Stage) => windows.map((w) => trend.series.find((r) => r.etapa_id === s && r.janela === w)!);
   const path = line<(typeof trend.series)[number]>()
     .x((d) => x(d.janela)!)
-    .y((d) => y(d.var_vs_inicio_pct));
+    .y((d) => y(val(d)));
   const winLabel = (id: string) => t.trend.windows[id] ?? id;
   // A separação desenha por último, por cima das outras.
   const order = [...STAGES.filter((s) => s !== FOCUS), FOCUS];
   // Rótulos no fim das linhas: empurra para baixo os que ficariam a menos de 15px do anterior.
   const labelY: Partial<Record<Stage, number>> = {};
   [...STAGES]
-    .map((s) => ({ s, y: y(series(s)[windows.length - 1].var_vs_inicio_pct) }))
+    .map((s) => ({ s, y: y(val(series(s)[windows.length - 1])) }))
     .sort((a, b) => a.y - b.y)
     .forEach((l, i, arr) => {
       const prev = i > 0 ? labelY[arr[i - 1].s]! : -Infinity;
@@ -51,13 +57,24 @@ export function TrendChart() {
       title={t.trend.chartTitle}
       subtitle={t.trend.chartSubtitle}
       sqlId="q4"
+      controls={
+        <Segmented
+          label={t.trend.chartTitle}
+          value={mode}
+          onChange={setMode}
+          options={[
+            { value: "adjusted", label: t.trend.adjusted },
+            { value: "raw", label: t.trend.raw },
+          ]}
+        />
+      }
       legend={[
         { label: stageLabel(FOCUS, lang), color: color(FOCUS), shape: "line" },
         { label: STAGES.filter((s) => s !== FOCUS).map((s) => stageLabel(s, lang)).join(" · "), color: "var(--series-rest)", shape: "line" },
       ]}
       table={{
         columns: ["", ...windows.map(winLabel)],
-        rows: STAGES.map((s) => [stageLabel(s, lang), ...series(s).map((d) => `${f.pp(d.taxa_pct, 3)} (${f.spp(d.var_vs_inicio_pct, 0)})`)]),
+        rows: STAGES.map((s) => [stageLabel(s, lang), ...series(s).map((d) => `${f.pp(d[RATE[mode]], 3)} (${f.spp(val(d), 0)})`)]),
       }}
     >
       <div ref={box} className="relative">
@@ -98,11 +115,11 @@ export function TrendChart() {
                   strokeWidth={s === FOCUS ? 2.5 : 2}
                   strokeLinejoin="round"
                   initial={{ pathLength: 0 }}
-                  animate={{ pathLength: inView ? 1 : 0 }}
+                  animate={{ pathLength: inView ? 1 : 0, d: path(d) ?? "" }}
                   transition={{ duration: 1.2, delay: s === FOCUS ? 0.4 : 0 }}
                 />
                 {d.map((p) => (
-                  <circle key={p.janela} cx={x(p.janela)} cy={y(p.var_vs_inicio_pct)} r={4} fill={color(s)} stroke="var(--surface)" strokeWidth={2} />
+                  <motion.circle key={p.janela} cx={x(p.janela)} animate={{ cy: y(val(p)) }} initial={false} r={4} fill={color(s)} stroke="var(--surface)" strokeWidth={2} />
                 ))}
                 {!narrow && (
                   <text
@@ -111,7 +128,7 @@ export function TrendChart() {
                     dy="0.32em"
                     className={`text-[12px] tabular ${s === FOCUS ? "fill-ink font-semibold" : "fill-ink-2"}`}
                   >
-                    {stageLabel(s, lang)} {f.spp(last.var_vs_inicio_pct, 0)}
+                    {stageLabel(s, lang)} {f.spp(val(last), 0)}
                   </text>
                 )}
               </g>
@@ -126,8 +143,8 @@ export function TrendChart() {
               return (
                 <TooltipRow
                   key={s}
-                  value={f.spp(d.var_vs_inicio_pct, 1)}
-                  label={`${stageLabel(s, lang)} · ${f.pp(d.taxa_pct, 2)}`}
+                  value={f.spp(val(d), 1)}
+                  label={`${stageLabel(s, lang)} · ${f.pp(d[RATE[mode]], 2)}`}
                   color={color(s)}
                 />
               );

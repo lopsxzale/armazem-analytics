@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { findings as fd, pareto } from "@/lib/data";
+import { findings as fd, sensitivity as sens } from "@/lib/data";
 import { fill } from "@/lib/format";
 import { comboLabel } from "@/lib/labels";
 import { CountUp } from "./motion";
@@ -13,20 +13,22 @@ export function Summary() {
   const values: Record<string, { value: number; format: (v: number) => string }> = {
     top3: { value: a.top3_pct, format: (v) => f.pp(v, 0) },
     glass: { value: a.long_neck_pct_custo, format: (v) => f.pp(v, 0) },
-    picking: { value: a.separacao_var_pct, format: (v) => f.spp(v, 0) },
+    picking: { value: a.separacao_var_ajustada_pct, format: (v) => f.spp(v, 0) },
   };
+  const range = (k: keyof typeof sens.faixas) => `${f.pp(sens.faixas[k].p5, 0)}–${f.pp(sens.faixas[k].p95, 0)}`;
   const [c1, c2, c3] = a.top3.map((c) => comboLabel(c.motivo_id, c.etapa_id, lang).toLowerCase());
-  const vars = {
-    top1: c1.charAt(0).toUpperCase() + c1.slice(1),
-    top2: c2,
-    top3: c3,
-    n80: a.combos_ate_80,
-    total: pareto.total_combos,
-    glassVol: f.pp(a.long_neck_pct_volume, 0),
-    ratio: `${f.dec(a.long_neck_taxa_pct / a.lata_taxa_pct, 1)}×`,
-    glassRate: f.pp(a.long_neck_taxa_pct, 2),
-    canRate: f.pp(a.lata_taxa_pct, 2),
-    others: f.pp(Math.abs(a.outras_var_media_pct), 0),
+  const vars: Record<string, Record<string, string | number>> = {
+    top3: { top1: c1.charAt(0).toUpperCase() + c1.slice(1), top2: c2, top3: c3, range: range("top3_pct") },
+    glass: {
+      glassVol: f.pp(a.long_neck_pct_volume, 0),
+      ratio: `${f.dec(a.long_neck_taxa_pct / a.lata_taxa_pct, 1)}×`,
+      range: range("long_neck_pct_custo"),
+    },
+    picking: {
+      raw: f.spp(a.separacao_var_pct, 0),
+      othersAdj: f.spp(a.outras_var_ajustada_media_pct, 0),
+      planted: f.pp(a.tendencia_plantada_pct, 0),
+    },
   };
 
   return (
@@ -69,7 +71,7 @@ export function Summary() {
                   <CountUp value={v.value} format={v.format} />
                 </p>
                 <p className="mt-1 text-sm font-medium text-ink-2">{card.title}</p>
-                <p className="mt-4 text-sm leading-relaxed text-muted">{fill(card.text, vars)}</p>
+                <p className="mt-4 text-sm leading-relaxed text-muted">{fill(card.text, vars[card.value])}</p>
               </motion.li>
             );
           })}

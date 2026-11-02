@@ -14,6 +14,7 @@ import export_web
 import load
 import metrics
 import referencias as ref
+import simulate
 
 
 @pytest.fixture(scope="module")
@@ -37,7 +38,19 @@ def _sem_nan(valor):
 
 
 def test_todos_os_arquivos_que_o_site_importa_existem(site):
-    esperados = {"meta", "pareto", "mensal", "matriz", "tendencia", "abc", "simulador", "findings", "sql"}
+    esperados = {
+        "meta",
+        "pareto",
+        "mensal",
+        "matriz",
+        "tendencia",
+        "abc",
+        "real",
+        "simulador",
+        "findings",
+        "sensibilidade",
+        "sql",
+    }
     assert esperados <= set(site)
 
 
@@ -84,3 +97,46 @@ def test_custo_mensal_bate_com_o_simulador(site):
 def test_sql_publicado_e_o_do_repositorio(site):
     for chave, info in site["sql"].items():
         assert info["sql"] == export_web.sql_text(chave)
+
+
+# ---------------------------------------------------------------- SQL x pandas (mesma conta por dois caminhos)
+
+
+@pytest.fixture(scope="module")
+def tabelas():
+    mov = pd.read_parquet(simulate.APP_DIR / "movimentos_mensais.parquet")
+    itens = pd.read_parquet(simulate.APP_DIR / "itens.parquet")
+    avarias = pd.read_parquet(simulate.SIM_DIR / "avarias.parquet")
+    return avarias, mov, itens
+
+
+def test_achados_pandas_batem_com_sql(site, tabelas):
+    precos = {k: v["preco_caixa_brl"] for k, v in ref.EMBALAGENS.items()}
+    a = metrics.achados(*tabelas, precos, ref.JANELA_CORTES)
+    sql = site["findings"]["achados"]
+    assert a["top3_pct"] == pytest.approx(sql["top3_pct"], abs=0.01)
+    assert a["long_neck_pct_custo"] == pytest.approx(sql["long_neck_pct_custo"], abs=0.01)
+    assert a["foco_var_pct"] == pytest.approx(sql["separacao_var_pct"], abs=0.01)
+    assert a["foco_var_ajustada_pct"] == pytest.approx(sql["separacao_var_ajustada_pct"], abs=0.01)
+    assert a["custo_medio_mensal_brl"] == pytest.approx(site["meta"]["custo_medio_mensal_brl"], rel=1e-6)
+
+
+def test_curva_abc_sql_bate_com_pandas(site, tabelas):
+    _, mov, _ = tabelas
+    volumes = mov.groupby("item_code")["caixas_movimentadas"].sum()
+    classe = metrics.curva_abc(volumes[volumes > 0])
+    sql = {c["classe"]: c["itens"] for c in site["abc"]["classes"]}
+    assert classe.value_counts().to_dict() == sql
+
+
+def test_mix_real_soma_100(site):
+    mix = pd.DataFrame(site["real"]["mix"])
+    assert mix.groupby("ano")["pct"].sum().tolist() == pytest.approx([100] * mix["ano"].nunique(), abs=0.05)
+
+
+def test_sensibilidade_coerente(site):
+    s = site["sensibilidade"]
+    for faixa in [*s["faixas"].values(), *s["nulo"].values()]:
+        assert faixa["p5"] <= faixa["p50"] <= faixa["p95"]
+    # Sem tendência plantada, a taxa ajustada da separação fica perto de zero.
+    assert abs(s["nulo"]["foco_var_ajustada_pct"]["p50"]) < 5

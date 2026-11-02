@@ -6,11 +6,17 @@
 
 ## Resultados da v1
 
-Volumes reais de cerveja e barris (Montgomery County, 27 meses entre jun/2017 e ago/2026) com avarias **simuladas** e calibradas:
+**Só dado real** (Montgomery County, 27 meses entre jun/2017 e ago/2026):
 
-- **46% do custo vem de 3 combinações** motivo × etapa (quebra no manuseio na separação, queda de palete no carregamento, quebra no manuseio no carregamento). 9 de 16 combinações explicam 80%.
-- **Long neck é 80% do custo com 51% do volume**: a taxa de avaria do vidro (1,16%) é 2,4× a da lata.
-- **A avaria na separação cresceu 31%** entre a primeira e a última janela da série, enquanto as outras etapas caíram.
+- **O mix mudou:** a lata foi de 38% para 54% do volume e o long neck de 53% para 41%. Como lata quebra menos, qualquer taxa de avaria bruta cai sozinha com o tempo.
+- **O volume é concentrado:** 233 de 9.537 itens (2,4%) somam 80% das caixas.
+- **Estornos são raros** (0,013% das caixas), mas o barril estorna em 26 dos 27 meses, cerca de 10× mais que as outras embalagens.
+
+**Sobre a camada simulada** (intervalos p5–p95 de 120 simulações com premissas sorteadas em faixas, `src/sensitivity.py`):
+
+- **Long neck é 80% do custo com 51% do volume** (76–84%). É o achado mais robusto às premissas.
+- **46% do custo vem de 3 combinações** motivo × etapa (43–50%). Depende sobretudo de quanto da avaria cai na separação, que é premissa.
+- **A taxa bruta engana:** na separação ela sobe 31% e nas outras etapas cai 11%. **Ajustada por mix**, a separação sobe 46% e as outras ficam estáveis. A alta foi plantada (+45%) para testar o método, que a recupera com erro mediano de −1,3 p.p.; sem alta plantada, a taxa ajustada fica entre −5% e +5%.
 - Perda estimada de **R$ 210 mil por mês** (0,84% das caixas); reduzir 30% da avaria na separação economiza cerca de **R$ 27 mil por mês**.
 
 ## Como rodar
@@ -21,6 +27,7 @@ pip install -r requirements.txt
 python src/extract.py      # baixa o Montgomery para data/raw/ (30 MB, fora do git)
 python src/transform.py    # cerveja e barris, embalagem pela descrição -> data/app/*.parquet
 python src/simulate.py     # avarias simuladas, seed fixo -> data/sim/avarias.parquet
+python src/sensitivity.py  # ~2 min: achados com premissas variando -> web/src/data/sensibilidade.json
 python src/load.py         # (opcional) banco SQLite em data/armazem.db para explorar as queries
 python src/export_web.py   # roda sql/analysis/ e gera web/src/data/*.json + docs/resumo-executivo.md
 pytest -q && ruff check .

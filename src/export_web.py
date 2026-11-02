@@ -26,6 +26,7 @@ ROOT_DIR = Path(__file__).resolve().parent.parent
 SQL_DIR = ROOT_DIR / "sql" / "analysis"
 WEB_DATA_DIR = ROOT_DIR / "web" / "src" / "data"
 RESUMO = ROOT_DIR / "docs" / "resumo-executivo.md"
+SENSIBILIDADE = WEB_DATA_DIR / "sensibilidade.json"  # gerado por src/sensitivity.py (roda antes deste script)
 
 QUERIES = {
     "q1": "q1_pareto_motivo_etapa",
@@ -34,6 +35,8 @@ QUERIES = {
     "q4": "q4_tendencia_etapa",
     "q5": "q5_curva_abc",
     "q6": "q6_top_itens",
+    "q7": "q7_mix_embalagem",
+    "q8": "q8_estornos",
 }
 REDUCAO_PADRAO = 30  # % de redução usada nos achados e no valor inicial do simulador
 PRECOS = {k: v["preco_caixa_brl"] for k, v in ref.EMBALAGENS.items()}
@@ -156,11 +159,36 @@ def build_matriz(q: dict[str, pd.DataFrame], con: sqlite3.Connection) -> dict:
 
 def build_tendencia(q: dict[str, pd.DataFrame]) -> dict:
     t = q["q4"]
-    ultima = t[t["janela"] == t["janela"].max()].set_index("etapa_id")["var_vs_inicio_pct"]
+    ultima = t[t["janela"] == t["janela"].max()].set_index("etapa_id")
     return {
         "janelas": [{"id": k, "rotulo": v} for k, v in ref.JANELAS.items()],
         "series": records(t),
-        "var_final_pct": ultima.to_dict(),
+        "var_final_pct": ultima["var_vs_inicio_pct"].to_dict(),
+        "var_final_ajustada_pct": ultima["var_ajustada_vs_inicio_pct"].to_dict(),
+    }
+
+
+def build_real(q: dict[str, pd.DataFrame]) -> dict:
+    """Só dado real do Montgomery: mix de embalagem por ano, estornos e concentração do volume."""
+    mix = q["q7"]
+    primeiro, ultimo = mix["ano"].min(), mix["ano"].max()
+    pct = mix.set_index(["ano", "embalagem_id"])["pct"]
+    classes = q["q5"].set_index("classe")
+    estornos = q["q8"]
+    return {
+        "mix": records(mix),
+        "ano_inicio": primeiro,
+        "ano_fim": ultimo,
+        "lata_inicio_pct": pct[(primeiro, "lata")],
+        "lata_fim_pct": pct[(ultimo, "lata")],
+        "long_neck_inicio_pct": pct[(primeiro, "long_neck")],
+        "long_neck_fim_pct": pct[(ultimo, "long_neck")],
+        "estornos": records(estornos),
+        "estornos_total": estornos["caixas_devolvidas"].sum(),
+        "estornos_taxa_pct": estornos["caixas_devolvidas"].sum() / estornos["caixas_movimentadas"].sum() * 100,
+        "itens_a": int(classes.loc["A", "itens"]),
+        "itens_total": int(classes["itens"].sum()),
+        "pct_volume_a": classes.loc["A", "pct_volume"],
     }
 
 
@@ -184,7 +212,9 @@ def build_findings(meta: dict, pareto: dict, matriz: dict, tendencia: dict, cm: 
     top3 = combos.head(3)
     emb = pd.DataFrame(matriz["embalagens"]).set_index("embalagem_id")
     var = tendencia["var_final_pct"]
+    var_aj = tendencia["var_final_ajustada_pct"]
     outras = [v for k, v in var.items() if k != "separacao"]
+    outras_aj = [v for k, v in var_aj.items() if k != "separacao"]
 
     eco_separacao = metrics.economia_simulada(cm, PRECOS, REDUCAO_PADRAO, etapa="separacao")
     eco_long_neck = metrics.economia_simulada(cm, PRECOS, REDUCAO_PADRAO, embalagem="long_neck")
@@ -209,6 +239,9 @@ def build_findings(meta: dict, pareto: dict, matriz: dict, tendencia: dict, cm: 
             "lata_taxa_pct": emb.loc["lata", "taxa_pct"],
             "separacao_var_pct": var["separacao"],
             "outras_var_media_pct": sum(outras) / len(outras),
+            "separacao_var_ajustada_pct": var_aj["separacao"],
+            "outras_var_ajustada_media_pct": sum(outras_aj) / len(outras_aj),
+            "tendencia_plantada_pct": (ref.TENDENCIA_ETAPA["separacao"] - 1) * 100,
         },
         "acoes": {
             "reducao_pct": REDUCAO_PADRAO,
@@ -246,31 +279,47 @@ def pct(valor: float, casas: int = 0) -> str:
     return f"{valor:.{casas}f}%".replace(".", ",")
 
 
+def inteiro(valor: float) -> str:
+    return f"{valor:,.0f}".replace(",", ".")
+
+
 def vezes(valor: float) -> str:
     return f"{valor:.1f}×".replace(".", ",")
 
 
-def write_resumo(meta: dict, findings: dict) -> Path:
+def write_resumo(meta: dict, findings: dict, real: dict, sens: dict) -> Path:
     a, c = findings["achados"], findings["acoes"]
+    f, n = sens["faixas"], sens["nulo"]
     nomes = [f"{ref.MOTIVOS[t['motivo_id']].lower()} {ref.ETAPAS[t['etapa_id']]['em']}" for t in a["top3"]]
+
+    def intervalo(chave: str, casas: int = 0) -> str:
+        return f"{pct(f[chave]['p5'], casas)} a {pct(f[chave]['p95'], casas)}"
+
     texto = f"""# Resumo executivo · Armazém Analytics v1 (refugo e avarias)
 
-> Volumes reais de cerveja e barris (Montgomery County, {meta["periodo_inicio"]} a {meta["periodo_fim"]}, {meta["meses"]} meses com dado).
+> Volumes **reais** de cerveja e barris (Montgomery County, {meta["periodo_inicio"]} a {meta["periodo_fim"]}, {meta["meses"]} meses com dado).
 > Avarias e preços **simulados** (seed {meta["seed"]}), com premissas em `src/referencias.py`. Gerado por `src/export_web.py`.
+> Intervalos: p5–p95 de {sens["rodadas"]} simulações com premissas sorteadas em faixas plausíveis (`src/sensitivity.py`).
 
 **Perda estimada:** {brl(meta["custo_medio_mensal_brl"])} por mês ({pct(meta["taxa_pct"], 2)} das caixas movimentadas).
 
-## 3 achados
+## O que o dado real mostra (sem simulação)
 
-1. **{pct(a["top3_pct"])} do custo vem de 3 combinações:** {nomes[0]}, {nomes[1]} e {nomes[2]}. {a["combos_ate_80"]} combinações motivo × etapa explicam 80% da perda.
-2. **Long neck é {pct(a["long_neck_pct_custo"])} do custo com {pct(a["long_neck_pct_volume"])} do volume.** A taxa de avaria do vidro ({pct(a["long_neck_taxa_pct"], 2)}) é {vezes(a["long_neck_taxa_pct"] / a["lata_taxa_pct"])} a da lata.
-3. **A avaria na separação cresceu {pct(a["separacao_var_pct"])}** entre a primeira e a última janela da série, enquanto as outras etapas variaram {pct(a["outras_var_media_pct"])} em média.
+- **O mix mudou:** a lata foi de {pct(real["lata_inicio_pct"])} para {pct(real["lata_fim_pct"])} do volume ({real["ano_inicio"]}→{real["ano_fim"]}); o long neck, de {pct(real["long_neck_inicio_pct"])} para {pct(real["long_neck_fim_pct"])}.
+- **O volume é concentrado:** {real["itens_a"]} de {inteiro(real["itens_total"])} itens somam {pct(real["pct_volume_a"])} das caixas.
+- **Estornos são raros** ({pct(real["estornos_taxa_pct"], 3)} das caixas), mas o barril estorna cerca de 10× mais que lata e long neck.
+
+## 3 achados (sobre a camada simulada)
+
+1. **{pct(a["top3_pct"])} do custo vem de 3 combinações** ({intervalo("top3_pct")}): {nomes[0]}, {nomes[1]} e {nomes[2]}. Este achado depende sobretudo de quanto da avaria cai na separação, que é premissa.
+2. **Long neck é {pct(a["long_neck_pct_custo"])} do custo com {pct(a["long_neck_pct_volume"])} do volume** ({intervalo("long_neck_pct_custo")}). É o achado mais robusto: vale em todas as faixas testadas.
+3. **A taxa bruta engana:** na separação ela sobe {pct(a["separacao_var_pct"])} e nas outras etapas cai {pct(abs(a["outras_var_media_pct"]))}, mas parte disso é só a troca de long neck por lata. **Ajustada por mix**, a separação sobe {pct(a["separacao_var_ajustada_pct"])} e as outras ficam estáveis ({pct(a["outras_var_ajustada_media_pct"])}). A simulação embute +{pct(a["tendencia_plantada_pct"])} na separação: o método recupera a alta plantada (erro mediano de {pct(sens["recuperacao"]["erro_mediano_pp"], 1).replace("%", " p.p.")}), e sem alta plantada a taxa ajustada fica entre {pct(n["foco_var_ajustada_pct"]["p5"])} e {pct(n["foco_var_ajustada_pct"]["p95"])}.
 
 ## 3 ações
 
 1. **Separação:** treinamento de manuseio e caixa plástica para fracionado de vidro.
 2. **Long neck:** filme stretch extra e cantoneira no palete de vidro, separando lata de vidro na montagem.
-3. **Carregamento e armazenagem:** padrão de amarração e limite de empilhamento sinalizado na posição.
+3. **Indicador:** acompanhar a taxa de avaria **ajustada por mix**, não a bruta, para não confundir troca de embalagem com melhora de processo.
 
 ## Quanto economiza (reduzindo {c["reducao_pct"]}%)
 
@@ -296,6 +345,8 @@ def main() -> None:
     matriz = build_matriz(q, con)
     tendencia = build_tendencia(q)
     findings = build_findings(meta, pareto, matriz, tendencia, cm)
+    real = build_real(q)
+    sens = json.loads(SENSIBILIDADE.read_text(encoding="utf-8"))
     payloads = {
         "meta": meta,
         "pareto": pareto,
@@ -303,13 +354,14 @@ def main() -> None:
         "matriz": matriz,
         "tendencia": tendencia,
         "abc": build_abc(q),
+        "real": real,
         "simulador": build_simulador(cm),
         "findings": findings,
         "sql": build_sql(),
     }
     for nome, payload in payloads.items():
         write(nome, payload)
-    write_resumo(meta, findings)
+    write_resumo(meta, findings, real, sens)
     con.close()
     print(f"{len(payloads)} JSONs em {WEB_DATA_DIR} e resumo em {RESUMO}")
 

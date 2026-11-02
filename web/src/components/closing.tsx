@@ -21,7 +21,7 @@ export function Actions() {
       whileInView="show"
       viewport={{ once: true, margin: "0px 0px -10% 0px" }}
       variants={{ show: { transition: { staggerChildren: 0.09 } } }}
-      className="grid gap-4 md:grid-cols-2 lg:grid-cols-3"
+      className="grid gap-4 md:grid-cols-2"
     >
       {t.actions.items.map((item, i) => (
         <motion.li
@@ -102,6 +102,25 @@ export function Method() {
                     {d.title}
                   </p>
                   <p className="mt-1.5 text-sm leading-relaxed text-ink-2">{fill(d.text, decisionVars)}</p>
+                </li>
+              ))}
+            </ul>
+            <h3 className="mt-8 font-semibold tracking-tight text-ink">{t.method.originTitle}</h3>
+            <ul className="mt-3 divide-y divide-line rounded-xl ring-1 ring-line">
+              {t.method.origins.map((o) => (
+                <li key={o.label} className="flex items-center justify-between gap-3 px-3 py-2 text-sm">
+                  <span className="text-ink-2">{o.label}</span>
+                  <span
+                    className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium ${
+                      o.kind === "real"
+                        ? "bg-[var(--series-1)] text-white"
+                        : o.kind === "premise"
+                          ? "border border-dashed border-ink-2 text-ink-2"
+                          : "bg-surface-2 text-ink-2"
+                    }`}
+                  >
+                    {t.method.kinds[o.kind]}
+                  </span>
                 </li>
               ))}
             </ul>

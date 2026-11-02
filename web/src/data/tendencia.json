@@ -25,7 +25,9 @@
    "caixas_avariadas": 4348,
    "taxa_pct": 0.1636,
    "var_pp": null,
-   "var_vs_inicio_pct": 0.0
+   "var_vs_inicio_pct": 0.0,
+   "taxa_ajustada_pct": 0.1636,
+   "var_ajustada_vs_inicio_pct": 0.0
   },
   {
    "janela": "2019-01",
@@ -34,7 +36,9 @@
    "caixas_avariadas": 5355,
    "taxa_pct": 0.1633,
    "var_pp": -0.0002,
-   "var_vs_inicio_pct": -0.14
+   "var_vs_inicio_pct": -0.14,
+   "taxa_ajustada_pct": 0.1658,
+   "var_ajustada_vs_inicio_pct": 1.38
   },
   {
    "janela": "2020-01",
@@ -43,7 +47,9 @@
    "caixas_avariadas": 1988,
    "taxa_pct": 0.1557,
    "var_pp": -0.0076,
-   "var_vs_inicio_pct": -4.8
+   "var_vs_inicio_pct": -4.8,
+   "taxa_ajustada_pct": 0.1611,
+   "var_ajustada_vs_inicio_pct": -1.53
   },
   {
    "janela": "2026-06",
@@ -52,7 +58,9 @@
    "caixas_avariadas": 1227,
    "taxa_pct": 0.1508,
    "var_pp": -0.0049,
-   "var_vs_inicio_pct": -7.8
+   "var_vs_inicio_pct": -7.8,
+   "taxa_ajustada_pct": 0.1677,
+   "var_ajustada_vs_inicio_pct": 2.53
   },
   {
    "janela": "2017-06",
@@ -61,7 +69,9 @@
    "caixas_avariadas": 5524,
    "taxa_pct": 0.2078,
    "var_pp": null,
-   "var_vs_inicio_pct": 0.0
+   "var_vs_inicio_pct": 0.0,
+   "taxa_ajustada_pct": 0.2078,
+   "var_ajustada_vs_inicio_pct": 0.0
   },
   {
    "janela": "2019-01",
@@ -70,7 +80,9 @@
    "caixas_avariadas": 6530,
    "taxa_pct": 0.1992,
    "var_pp": -0.0086,
-   "var_vs_inicio_pct": -4.16
+   "var_vs_inicio_pct": -4.16,
+   "taxa_ajustada_pct": 0.2023,
+   "var_ajustada_vs_inicio_pct": -2.67
   },
   {
    "janela": "2020-01",
@@ -79,7 +91,9 @@
    "caixas_avariadas": 2532,
    "taxa_pct": 0.1983,
    "var_pp": -0.0008,
-   "var_vs_inicio_pct": -4.56
+   "var_vs_inicio_pct": -4.56,
+   "taxa_ajustada_pct": 0.2047,
+   "var_ajustada_vs_inicio_pct": -1.49
   },
   {
    "janela": "2026-06",
@@ -88,7 +102,9 @@
    "caixas_avariadas": 1468,
    "taxa_pct": 0.1804,
    "var_pp": -0.0179,
-   "var_vs_inicio_pct": -13.17
+   "var_vs_inicio_pct": -13.17,
+   "taxa_ajustada_pct": 0.2007,
+   "var_ajustada_vs_inicio_pct": -3.41
   },
   {
    "janela": "2017-06",
@@ -97,7 +113,9 @@
    "caixas_avariadas": 3319,
    "taxa_pct": 0.1249,
    "var_pp": null,
-   "var_vs_inicio_pct": 0.0
+   "var_vs_inicio_pct": 0.0,
+   "taxa_ajustada_pct": 0.1249,
+   "var_ajustada_vs_inicio_pct": 0.0
   },
   {
    "janela": "2019-01",
@@ -106,7 +124,9 @@
    "caixas_avariadas": 3942,
    "taxa_pct": 0.1202,
    "var_pp": -0.0046,
-   "var_vs_inicio_pct": -3.7
+   "var_vs_inicio_pct": -3.7,
+   "taxa_ajustada_pct": 0.122,
+   "var_ajustada_vs_inicio_pct": -2.28
   },
   {
    "janela": "2020-01",
@@ -115,7 +135,9 @@
    "caixas_avariadas": 1554,
    "taxa_pct": 0.1217,
    "var_pp": 0.0015,
-   "var_vs_inicio_pct": -2.51
+   "var_vs_inicio_pct": -2.51,
+   "taxa_ajustada_pct": 0.1255,
+   "var_ajustada_vs_inicio_pct": 0.55
   },
   {
    "janela": "2026-06",
@@ -124,7 +146,9 @@
    "caixas_avariadas": 889,
    "taxa_pct": 0.1093,
    "var_pp": -0.0125,
-   "var_vs_inicio_pct": -12.48
+   "var_vs_inicio_pct": -12.48,
+   "taxa_ajustada_pct": 0.1217,
+   "var_ajustada_vs_inicio_pct": -2.54
   },
   {
    "janela": "2017-06",
@@ -133,7 +157,9 @@
    "caixas_avariadas": 8824,
    "taxa_pct": 0.332,
    "var_pp": null,
-   "var_vs_inicio_pct": 0.0
+   "var_vs_inicio_pct": 0.0,
+   "taxa_ajustada_pct": 0.332,
+   "var_ajustada_vs_inicio_pct": 0.0
   },
   {
    "janela": "2019-01",
@@ -142,7 +168,9 @@
    "caixas_avariadas": 11754,
    "taxa_pct": 0.3585,
    "var_pp": 0.0266,
-   "var_vs_inicio_pct": 8.0
+   "var_vs_inicio_pct": 8.0,
+   "taxa_ajustada_pct": 0.3643,
+   "var_ajustada_vs_inicio_pct": 9.75
   },
   {
    "janela": "2020-01",
@@ -151,7 +179,9 @@
    "caixas_avariadas": 4640,
    "taxa_pct": 0.3635,
    "var_pp": 0.005,
-   "var_vs_inicio_pct": 9.49
+   "var_vs_inicio_pct": 9.49,
+   "taxa_ajustada_pct": 0.3752,
+   "var_ajustada_vs_inicio_pct": 13.03
   },
   {
    "janela": "2026-06",
@@ -160,7 +190,9 @@
    "caixas_avariadas": 3532,
    "taxa_pct": 0.4341,
    "var_pp": 0.0707,
-   "var_vs_inicio_pct": 30.78
+   "var_vs_inicio_pct": 30.78,
+   "taxa_ajustada_pct": 0.4836,
+   "var_ajustada_vs_inicio_pct": 45.68
   }
  ],
  "var_final_pct": {
@@ -168,5 +200,11 @@
   "carregamento": -13.17,
   "doca": -12.48,
   "separacao": 30.78
+ },
+ "var_final_ajustada_pct": {
+  "armazenagem": 2.53,
+  "carregamento": -3.41,
+  "doca": -2.54,
+  "separacao": 45.68
  }
 }

@@ -3,6 +3,8 @@ import { codeToHtml } from "shiki";
 import { AbcCharts } from "@/components/charts/abc-charts";
 import { MonthlyChart } from "@/components/charts/monthly-chart";
 import { PackagingCharts } from "@/components/charts/packaging-charts";
+import { RealCharts } from "@/components/charts/real-charts";
+import { RobustCharts } from "@/components/charts/robust-chart";
 import { ParetoChart } from "@/components/charts/pareto-chart";
 import { TrendChart } from "@/components/charts/trend-chart";
 import { About, Actions, Footer, Method } from "@/components/closing";
@@ -14,7 +16,7 @@ import { Simulator } from "@/components/simulator";
 import { Summary } from "@/components/summary";
 import { hasLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n";
-import { abc, findings as fd, meta, pareto, sqlFiles } from "@/lib/data";
+import { abc, findings as fd, meta, pareto, real, sensitivity as sens, sqlFiles } from "@/lib/data";
 import { fill, formatters } from "@/lib/format";
 import { comboLabel } from "@/lib/labels";
 
@@ -57,8 +59,24 @@ export default async function Page({ params }: PageProps<"/[lang]">) {
         <Summary />
 
         <Section
-          id="pareto"
+          id="real"
           index="01"
+          eyebrow={t.real.eyebrow}
+          title={t.real.title}
+          lede={fill(t.real.lede, {
+            canStart: f.pp(real.lata_inicio_pct, 0),
+            canEnd: f.pp(real.lata_fim_pct, 0),
+            y0: real.ano_inicio,
+            y1: real.ano_fim,
+          })}
+          takeaway={t.real.takeaway}
+        >
+          <RealCharts months={meta.meses} />
+        </Section>
+
+        <Section
+          id="pareto"
+          index="02"
           eyebrow={t.pareto.eyebrow}
           title={t.pareto.title}
           lede={fill(t.pareto.lede, {
@@ -73,7 +91,7 @@ export default async function Page({ params }: PageProps<"/[lang]">) {
 
         <Section
           id="packaging"
-          index="02"
+          index="03"
           eyebrow={t.packaging.eyebrow}
           title={t.packaging.title}
           lede={fill(t.packaging.lede, {
@@ -87,7 +105,7 @@ export default async function Page({ params }: PageProps<"/[lang]">) {
 
         <Section
           id="monthly"
-          index="03"
+          index="04"
           eyebrow={t.monthly.eyebrow}
           title={fill(t.monthly.title, { monthly: f.brlCompact(meta.custo_medio_mensal_brl) })}
           lede={t.monthly.lede}
@@ -98,10 +116,14 @@ export default async function Page({ params }: PageProps<"/[lang]">) {
 
         <Section
           id="trend"
-          index="04"
+          index="05"
           eyebrow={t.trend.eyebrow}
           title={t.trend.title}
-          lede={fill(t.trend.lede, { picking: f.spp(a.separacao_var_pct, 0) })}
+          lede={fill(t.trend.lede, {
+            raw: f.spp(a.separacao_var_pct, 0),
+            adj: f.spp(a.separacao_var_ajustada_pct, 0),
+            planted: f.pp(a.tendencia_plantada_pct, 0),
+          })}
           takeaway={t.trend.takeaway}
         >
           <TrendChart />
@@ -109,7 +131,7 @@ export default async function Page({ params }: PageProps<"/[lang]">) {
 
         <Section
           id="abc"
-          index="05"
+          index="06"
           eyebrow={t.abc.eyebrow}
           title={t.abc.title}
           lede={fill(t.abc.lede, {
@@ -123,8 +145,26 @@ export default async function Page({ params }: PageProps<"/[lang]">) {
         </Section>
 
         <Section
+          id="robust"
+          index="07"
+          eyebrow={t.robust.eyebrow}
+          title={t.robust.title}
+          lede={fill(t.robust.lede, {
+            runs: sens.rodadas,
+            m0: f.dec(sens.faixas_premissas.mult_long_neck.min, 1),
+            m1: f.dec(sens.faixas_premissas.mult_long_neck.max, 1),
+            s0: f.pp(sens.faixas_premissas.participacao_separacao.min * 100, 0),
+            s1: f.pp(sens.faixas_premissas.participacao_separacao.max * 100, 0),
+            t1: f.pp((sens.faixas_premissas.tendencia_separacao.max - 1) * 100, 0),
+          })}
+          takeaway={fill(t.robust.takeaway, { err: `${f.dec(sens.recuperacao.erro_mediano_pp, 1)} p.p.` })}
+        >
+          <RobustCharts />
+        </Section>
+
+        <Section
           id="simulator"
-          index="06"
+          index="08"
           eyebrow={t.simulator.eyebrow}
           title={t.simulator.title}
           lede={t.simulator.lede}
@@ -135,7 +175,7 @@ export default async function Page({ params }: PageProps<"/[lang]">) {
 
         <Section
           id="actions"
-          index="07"
+          index="09"
           eyebrow={t.actions.eyebrow}
           title={t.actions.title}
           lede={fill(t.actions.lede, savings)}
@@ -143,7 +183,7 @@ export default async function Page({ params }: PageProps<"/[lang]">) {
           <Actions />
         </Section>
 
-        <Section id="method" index="08" eyebrow={t.method.eyebrow} title={t.method.title} lede={t.method.lede}>
+        <Section id="method" index="10" eyebrow={t.method.eyebrow} title={t.method.title} lede={t.method.lede}>
           <Method />
         </Section>
 

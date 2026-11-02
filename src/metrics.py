@@ -58,3 +58,79 @@ def economia_simulada(
         d = d[d["embalagem_id"] == embalagem]
     custo = (d["caixas"] * d["embalagem_id"].map(precos)).sum()
     return float(custo * reducao_pct / 100)
+
+
+def janela(periodos: pd.Series, cortes: Mapping[str, str]) -> pd.Series:
+    """Janela contínua de cada período 'AAAA-MM' (mesma regra do CASE em sql/analysis/q4_tendencia_etapa.sql).
+
+    `cortes` mapeia o último período de cada janela -> id da janela, em ordem crescente.
+    """
+    out = pd.Series(list(cortes.values())[-1], index=periodos.index)
+    for limite, nome in reversed(list(cortes.items())):
+        out[periodos <= limite] = nome
+    return out
+
+
+def taxa_por_janela(
+    avarias: pd.DataFrame, mov: pd.DataFrame, itens: pd.DataFrame, cortes: Mapping[str, str], ajustar_mix: bool
+) -> pd.DataFrame:
+    """Taxa de avaria (% das caixas) por etapa e janela; com `ajustar_mix`, padronizada pelo mix de embalagem da 1ª janela.
+
+    Taxa ajustada = soma, nas embalagens, de taxa(etapa, embalagem, janela) x peso da embalagem no volume da 1ª janela.
+    Assim a variação mede só a mudança de taxa, não a troca de long neck por lata ao longo dos anos.
+    """
+    emb = itens.set_index("item_code")["embalagem_id"]
+    m = mov.assign(janela=janela(mov["periodo"], cortes), embalagem_id=mov["item_code"].map(emb))
+    a = avarias.assign(janela=janela(avarias["periodo"], cortes), embalagem_id=avarias["item_code"].map(emb))
+    vol = m.groupby(["janela", "embalagem_id"])["caixas_movimentadas"].sum()
+    av = a.groupby(["etapa_id", "janela", "embalagem_id"])["caixas"].sum()
+    if not ajustar_mix:
+        tot = vol.groupby("janela").sum()
+        bruta = av.groupby(["etapa_id", "janela"]).sum() / tot.reindex(
+            av.groupby(["etapa_id", "janela"]).sum().index, level="janela"
+        )
+        return (bruta * 100).rename("taxa_pct").reset_index()
+    primeira = sorted(vol.index.get_level_values("janela").unique())[0]
+    peso = vol.xs(primeira, level="janela") / vol.xs(primeira, level="janela").sum()
+    taxa = av / vol.reindex(av.index.droplevel("etapa_id")).to_numpy()
+    ajust = (
+        (taxa * taxa.index.get_level_values("embalagem_id").map(peso).to_numpy()).groupby(["etapa_id", "janela"]).sum()
+    )
+    return (ajust * 100).rename("taxa_pct").reset_index()
+
+
+def variacao_final(taxas: pd.DataFrame) -> dict[str, float]:
+    """Variação % da taxa de cada etapa entre a primeira e a última janela."""
+    out = {}
+    for etapa, d in taxas.sort_values("janela").groupby("etapa_id"):
+        out[etapa] = (d["taxa_pct"].iloc[-1] / d["taxa_pct"].iloc[0] - 1) * 100
+    return out
+
+
+def achados(
+    avarias: pd.DataFrame,
+    mov: pd.DataFrame,
+    itens: pd.DataFrame,
+    precos: Mapping[str, float],
+    cortes: Mapping[str, str],
+    foco: str = "separacao",
+) -> dict[str, float]:
+    """Os números-chave do resumo a partir das tabelas (sem SQL). Usado pela sensibilidade e pelo teste cruzado."""
+    emb = itens.set_index("item_code")["embalagem_id"]
+    a = avarias.assign(embalagem_id=avarias["item_code"].map(emb))
+    a["custo"] = a["caixas"] * a["embalagem_id"].map(precos)
+    combos = pareto(a, "custo", ["motivo_id", "etapa_id"])
+    custo_emb = a.groupby("embalagem_id")["custo"].sum()
+    bruta = variacao_final(taxa_por_janela(avarias, mov, itens, cortes, ajustar_mix=False))
+    ajust = variacao_final(taxa_por_janela(avarias, mov, itens, cortes, ajustar_mix=True))
+    outras_b = [v for k, v in bruta.items() if k != foco]
+    outras_a = [v for k, v in ajust.items() if k != foco]
+    return {
+        "top3_pct": float(combos["pct"].head(3).sum()),
+        "long_neck_pct_custo": float(custo_emb.get("long_neck", 0) / custo_emb.sum() * 100),
+        "foco_var_pct": bruta[foco],
+        "foco_var_ajustada_pct": ajust[foco],
+        "outras_var_media_pct": sum(outras_b) / len(outras_b),
+        "outras_var_ajustada_media_pct": sum(outras_a) / len(outras_a),
+        "custo_medio_mensal_brl": float(a["custo"].sum() / mov["periodo"].nunique()),
+    }

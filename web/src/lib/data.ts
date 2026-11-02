@@ -6,6 +6,8 @@ import matrizJson from "@/data/matriz.json";
 import mensalJson from "@/data/mensal.json";
 import metaJson from "@/data/meta.json";
 import paretoJson from "@/data/pareto.json";
+import realJson from "@/data/real.json";
+import sensJson from "@/data/sensibilidade.json";
 import simuladorJson from "@/data/simulador.json";
 import sqlJson from "@/data/sql.json";
 import tendenciaJson from "@/data/tendencia.json";
@@ -100,8 +102,52 @@ export type Trend = {
     taxa_pct: number;
     var_pp: number | null;
     var_vs_inicio_pct: number;
+    taxa_ajustada_pct: number;
+    var_ajustada_vs_inicio_pct: number;
   }[];
   var_final_pct: Record<Stage, number>;
+  var_final_ajustada_pct: Record<Stage, number>;
+};
+
+export type Real = {
+  mix: { ano: number; embalagem_id: Package; caixas_movimentadas: number; pct: number }[];
+  ano_inicio: number;
+  ano_fim: number;
+  lata_inicio_pct: number;
+  lata_fim_pct: number;
+  long_neck_inicio_pct: number;
+  long_neck_fim_pct: number;
+  estornos: {
+    embalagem_id: Package;
+    caixas_devolvidas: number;
+    caixas_movimentadas: number;
+    taxa_pct: number;
+    meses_com_estorno: number;
+    itens_com_estorno: number;
+  }[];
+  estornos_total: number;
+  estornos_taxa_pct: number;
+  itens_a: number;
+  itens_total: number;
+  pct_volume_a: number;
+};
+
+export type Range = { p5: number; p50: number; p95: number };
+export type SensKey =
+  | "top3_pct"
+  | "long_neck_pct_custo"
+  | "foco_var_pct"
+  | "foco_var_ajustada_pct"
+  | "outras_var_ajustada_media_pct";
+export type PremiseKey = "mult_long_neck" | "participacao_separacao" | "tendencia_separacao";
+export type Sensitivity = {
+  rodadas: number;
+  rodadas_nulo: number;
+  faixas_premissas: Record<PremiseKey, { min: number; max: number }>;
+  faixas: Record<SensKey, Range>;
+  nulo: Record<SensKey, Range>;
+  recuperacao: { erro_mediano_pp: number; erro_absoluto_p90_pp: number };
+  dependencia: Record<SensKey, Record<PremiseKey, number>>;
 };
 
 export type Abc = {
@@ -143,6 +189,9 @@ export type Findings = {
     lata_taxa_pct: number;
     separacao_var_pct: number;
     outras_var_media_pct: number;
+    separacao_var_ajustada_pct: number;
+    outras_var_ajustada_media_pct: number;
+    tendencia_plantada_pct: number;
   };
   acoes: {
     reducao_pct: number;
@@ -153,7 +202,7 @@ export type Findings = {
   custo_medio_mensal_brl: number;
 };
 
-export type SqlId = "q1" | "q2" | "q3" | "q4" | "q5" | "q6";
+export type SqlId = "q1" | "q2" | "q3" | "q4" | "q5" | "q6" | "q7" | "q8";
 export type SqlFile = { arquivo: string; titulo: string; sql: string };
 
 export const meta = metaJson as Meta;
@@ -165,3 +214,5 @@ export const abc = abcJson as Abc;
 export const simulator = simuladorJson as Simulator;
 export const findings = findingsJson as Findings;
 export const sqlFiles = sqlJson as Record<SqlId, SqlFile>;
+export const real = realJson as Real;
+export const sensitivity = sensJson as Sensitivity;

@@ -41,3 +41,34 @@ def test_economia_simulada():
     assert metrics.economia_simulada(cm, precos, 10, etapa="separacao") == pytest.approx(1000.0)
     assert metrics.economia_simulada(cm, precos, 50, embalagem="lata") == pytest.approx(2750.0)
     assert metrics.economia_simulada(cm, precos, 0) == 0.0
+
+
+def test_janela_segue_os_cortes():
+    cortes = {"2018-12": "J1", "2020-12": "J2", "9999-12": "J3"}
+    per = pd.Series(["2017-06", "2018-12", "2019-01", "2026-08"])
+    assert metrics.janela(per, cortes).tolist() == ["J1", "J1", "J2", "J3"]
+
+
+def test_taxa_ajustada_ignora_mudanca_de_mix():
+    # Mesma taxa por embalagem nas duas janelas; só o mix muda (lata 20% -> 80%).
+    itens = pd.DataFrame({"item_code": ["v", "l"], "embalagem_id": ["long_neck", "lata"]})
+    mov = pd.DataFrame(
+        {
+            "periodo": ["2017-06", "2017-06", "2026-06", "2026-06"],
+            "item_code": ["v", "l", "v", "l"],
+            "caixas_movimentadas": [800.0, 200.0, 200.0, 800.0],
+        }
+    )
+    av = pd.DataFrame(
+        {
+            "periodo": ["2017-06", "2017-06", "2026-06", "2026-06"],
+            "item_code": ["v", "l", "v", "l"],
+            "etapa_id": "separacao",
+            "caixas": [16, 2, 4, 8],
+        }  # vidro 2%, lata 1% nas duas janelas
+    )
+    cortes = {"2018-12": "J1", "9999-12": "J2"}
+    bruta = metrics.variacao_final(metrics.taxa_por_janela(av, mov, itens, cortes, ajustar_mix=False))
+    ajust = metrics.variacao_final(metrics.taxa_por_janela(av, mov, itens, cortes, ajustar_mix=True))
+    assert bruta["separacao"] < -30  # a taxa bruta "cai" só porque o mix virou lata
+    assert ajust["separacao"] == pytest.approx(0.0, abs=1e-9)

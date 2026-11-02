@@ -71,6 +71,9 @@ PESO_MOTIVO_EMBALAGEM = {
 TENDENCIA_ETAPA = {"separacao": 1.45}
 
 # Janelas de comparação: o Montgomery tem lacunas grandes, então comparamos blocos contínuos.
+# Último período de cada janela -> id da janela (mesma regra do CASE em q4_tendencia_etapa.sql).
+JANELA_CORTES = {"2018-12": "2017-06", "2019-12": "2019-01", "2020-12": "2020-01", "9999-12": "2026-06"}
+
 JANELAS = {
     "2017-06": "J1 · jun/17–fev/18",
     "2019-01": "J2 · jan–nov/19",

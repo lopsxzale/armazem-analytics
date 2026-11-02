@@ -7,7 +7,7 @@ import { lockScroll, scrollToId } from "@/lib/lenis";
 import { Logo } from "./logo";
 import { useI18n } from "./providers";
 
-const SECTIONS = ["summary", "pareto", "packaging", "monthly", "trend", "abc", "simulator", "actions", "method"] as const;
+const SECTIONS = ["summary", "real", "pareto", "packaging", "monthly", "trend", "abc", "robust", "simulator", "method"] as const;
 
 function useActiveSection() {
   const [active, setActive] = useState<string>("");

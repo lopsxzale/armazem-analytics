@@ -3,6 +3,7 @@ import pandas as pd
 import pytest
 
 import referencias as ref
+import sensitivity
 import simulate
 
 
@@ -58,3 +59,27 @@ def test_pesos_motivo_somam_um():
 
 def test_participacao_das_etapas_soma_um():
     assert sum(e["participacao"] for e in ref.ETAPAS.values()) == pytest.approx(1.0)
+
+
+def test_premissas_padrao_reproduzem_a_v1(entrada):
+    pd.testing.assert_frame_equal(
+        simulate.simular(*entrada), simulate.simular(*entrada, premissas=simulate.premissas_padrao())
+    )
+
+
+def test_premissas_sorteadas_ficam_nas_faixas():
+    rng = np.random.default_rng(0)
+    for _ in range(20):
+        p, sorteio = sensitivity.premissas_sorteadas(rng)
+        assert sum(p["participacao"].values()) == pytest.approx(1.0)
+        for nome, valor in sorteio.items():
+            lo, hi = sensitivity.FAIXAS[nome]
+            assert lo <= valor <= hi
+
+
+def test_sem_tendencia_a_separacao_nao_cresce(entrada):
+    mov, itens = entrada
+    p = {**simulate.premissas_padrao(), "tendencia": {}}
+    av = simulate.simular(mov, itens, premissas=p)
+    taxas = av[av["etapa_id"] == "separacao"].groupby("periodo")["caixas"].sum()
+    assert taxas.iloc[-1] / taxas.iloc[0] == pytest.approx(1.0, rel=0.1)
