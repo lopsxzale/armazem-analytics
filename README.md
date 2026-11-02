@@ -2,7 +2,7 @@
 
 **Onde um armazém de bebidas perde dinheiro, e o que fazer primeiro?** Análise de ponta a ponta (extração → banco relacional → SQL analítico → métricas em Python → site interativo) sobre a rotina de armazém: **refugo e avarias**, **acuracidade de inventário**, **validade (FEFO)** e **devoluções**. Cada achado vira uma ação concreta para o chão do armazém.
 
-> **Status:** v1 (refugo e avarias) publicada. Site: _link na próxima atualização_ · Resumo: [`docs/resumo-executivo.md`](docs/resumo-executivo.md)
+> **Status:** v1 (refugo e avarias) publicada. Site: **[armazem-analytics.vercel.app](https://armazem-analytics.vercel.app/pt/)** · Resumo: [`docs/resumo-executivo.md`](docs/resumo-executivo.md)
 
 ## Resultados da v1
 
