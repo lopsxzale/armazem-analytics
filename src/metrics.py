@@ -5,6 +5,7 @@ As mesmas fórmulas são usadas no export do site e replicadas no simulador (web
 
 from __future__ import annotations
 
+import math
 from collections.abc import Mapping
 
 import pandas as pd
@@ -25,12 +26,16 @@ def itens_ate(pct_acum: pd.Series, corte: float = 80.0) -> int:
 
 
 def curva_abc(volumes: pd.Series, cortes: tuple[float, float] = (0.80, 0.95)) -> pd.Series:
-    """Classe A/B/C de cada item pelo volume acumulado (A até 80%, B até 95%, C o resto)."""
+    """Classe A/B/C de cada item pelo volume acumulado ANTES dele (A enquanto não passou de 80%, B até 95%).
+
+    Olhar o acumulado anterior garante que o item que cruza o corte ainda entra na classe: um item que
+    sozinho é 85% do volume é A, não B.
+    """
     ordem = volumes.sort_values(ascending=False, kind="stable")
-    acum = ordem.cumsum() / ordem.sum()
+    antes = (ordem.cumsum() - ordem) / ordem.sum()
     classe = pd.Series("C", index=ordem.index)
-    classe[acum <= cortes[1]] = "B"
-    classe[acum <= cortes[0]] = "A"
+    classe[antes < cortes[1]] = "B"
+    classe[antes < cortes[0]] = "A"
     return classe.reindex(volumes.index)
 
 
@@ -134,3 +139,57 @@ def achados(
         "outras_var_ajustada_media_pct": sum(outras_a) / len(outras_a),
         "custo_medio_mensal_brl": float(a["custo"].sum() / mov["periodo"].nunique()),
     }
+
+
+# ---------------------------------------------------------------- v2: frequência de contagem
+
+
+def poisson_cdf(k: int, media: float) -> float:
+    """P(N <= k) para N ~ Poisson(media), sem depender do scipy."""
+    termo, total = math.exp(-media), 0.0
+    for i in range(k + 1):
+        if i > 0:
+            termo *= media / i
+        total += termo
+    return total
+
+
+def ira_esperada(eventos_dia: float, tolerancia_eventos: int, intervalo_dias: float) -> float:
+    """IRA esperada (%) contando a cada `intervalo_dias`: chance de acumular no máximo `tolerancia_eventos` eventos."""
+    return poisson_cdf(tolerancia_eventos, eventos_dia * intervalo_dias) * 100
+
+
+def frequencia_recomendada(base: pd.DataFrame, premissas: Mapping) -> pd.DataFrame:
+    """Para cada classe, o MAIOR intervalo de contagem que mantém a IRA esperada >= meta, e o custo mensal.
+
+    `base` é a saída de sql/analysis/q12_base_frequencia.sql. A tolerância (max(1 caixa, 2% do estoque)) vira
+    número de eventos dividindo pelo tamanho médio de um evento (erro: caixas_por_erro; avaria: 1 caixa).
+    """
+    linhas = []
+    for r in base.itertuples():
+        eventos = r.eventos_avaria + r.eventos_erro
+        eventos_dia = eventos / r.item_meses / 30
+        tamanho = (r.eventos_erro * premissas["caixas_por_erro"] + r.eventos_avaria) / eventos
+        tolerancia = max(1.0, premissas["tolerancia_pct"] / 100 * r.estoque_medio)
+        k = max(0, round(tolerancia / tamanho))
+        opcoes = {d: ira_esperada(eventos_dia, k, d) for d in premissas["intervalos_dias"]}
+        ok = [d for d, ira in opcoes.items() if ira >= premissas["ira_meta_pct"]]
+        intervalo = max(ok) if ok else min(opcoes)
+        contagens_mes = r.itens_ativos * r.posicoes * 30 / intervalo
+        linhas.append(
+            {
+                "classe": r.classe,
+                "eventos_dia": eventos_dia,
+                "tolerancia_eventos": k,
+                "intervalo_dias": intervalo,
+                "ira_recomendada_pct": opcoes[intervalo],
+                "ira_mensal_pct": ira_esperada(eventos_dia, k, 30),
+                "itens_ativos": r.itens_ativos,
+                "posicoes": r.posicoes,
+                "contagens_mes": contagens_mes,
+                "custo_mes_brl": contagens_mes * premissas["custo_contagem_posicao_brl"],
+                "custo_mensal_todos_brl": r.itens_ativos * r.posicoes * premissas["custo_contagem_posicao_brl"],
+                "ira_por_intervalo": opcoes,
+            }
+        )
+    return pd.DataFrame(linhas)

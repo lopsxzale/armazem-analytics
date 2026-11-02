@@ -9,7 +9,7 @@
 ## O que o dado real mostra (sem simulação)
 
 - **O mix mudou:** a lata foi de 38% para 54% do volume (2017→2026); o long neck, de 53% para 41%.
-- **O volume é concentrado:** 233 de 9.537 itens somam 80% das caixas.
+- **O volume é concentrado:** 234 de 9.537 itens somam 80% das caixas.
 - **Estornos são raros** (0,013% das caixas), mas o barril estorna cerca de 10× mais que lata e long neck.
 
 ## 3 achados (sobre a camada simulada)

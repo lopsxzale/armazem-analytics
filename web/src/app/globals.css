@@ -32,6 +32,10 @@
   --series-1: #2a78d6;
   --series-focus: #eb6834;
   --series-rest: #b3afa4;
+  /* Classes ABC (v2): A em destaque, B e C em passos da mesma paleta. */
+  --abc-A: #eb6834;
+  --abc-B: #2a78d6;
+  --abc-C: #8f8b80;
   /* Sequencial (mapa de calor): um matiz, claro -> escuro. */
   --seq-0: #edf3fb;
   --seq-1: #cde2fb;
@@ -73,6 +77,9 @@
   --series-1: #3987e5;
   --series-focus: #e8703e;
   --series-rest: #5a564c;
+  --abc-A: #e8703e;
+  --abc-B: #3987e5;
+  --abc-C: #8a857a;
   /* No escuro a intensidade sobe em direção à luz. */
   --seq-0: #1d2633;
   --seq-1: #173e6e;

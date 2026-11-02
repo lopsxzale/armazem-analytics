@@ -38,7 +38,8 @@ def dimensoes() -> dict[str, pd.DataFrame]:
     )
     etapas = pd.DataFrame([{"etapa_id": k, "nome": v["nome"], "ordem": v["ordem"]} for k, v in ref.ETAPAS.items()])
     motivos = pd.DataFrame([{"motivo_id": k, "nome": v} for k, v in ref.MOTIVOS.items()])
-    return {"embalagens": embalagens, "etapas": etapas, "motivos": motivos}
+    causas = pd.DataFrame([{"causa_id": k, "nome": v} for k, v in ref.CAUSAS.items()])
+    return {"embalagens": embalagens, "etapas": etapas, "motivos": motivos, "causas_divergencia": causas}
 
 
 def tabelas() -> dict[str, pd.DataFrame]:
@@ -48,6 +49,8 @@ def tabelas() -> dict[str, pd.DataFrame]:
         "itens": pd.read_parquet(APP_DIR / "itens.parquet"),
         "movimentos_mensais": pd.read_parquet(APP_DIR / "movimentos_mensais.parquet"),
         "avarias": pd.read_parquet(SIM_DIR / "avarias.parquet"),
+        "contagens": pd.read_parquet(SIM_DIR / "contagens.parquet"),
+        "divergencias": pd.read_parquet(SIM_DIR / "divergencias.parquet"),
     }
 
 

@@ -1,0 +1,247 @@
+{
+ "ira": [
+  {
+   "classe": "A",
+   "contagens": 5943,
+   "ira_pct": 87.01,
+   "eventos_por_contagem": 3.433,
+   "caixas_divergentes": 17059,
+   "estoque_medio": 360.4
+  },
+  {
+   "classe": "B",
+   "contagens": 11426,
+   "ira_pct": 94.98,
+   "eventos_por_contagem": 0.343,
+   "caixas_divergentes": 4683,
+   "estoque_medio": 70.1
+  },
+  {
+   "classe": "C",
+   "contagens": 38419,
+   "ira_pct": 99.49,
+   "eventos_por_contagem": 0.031,
+   "caixas_divergentes": 1569,
+   "estoque_medio": 15.7
+  }
+ ],
+ "causas": [
+  {
+   "causa_id": "avaria_nao_baixada",
+   "eventos": 16831,
+   "caixas": 16831,
+   "valor_brl": 1408632.0,
+   "pct": 57.16,
+   "pct_acum": 57.16
+  },
+  {
+   "causa_id": "erro_separacao",
+   "eventos": 6336,
+   "caixas": 9086,
+   "valor_brl": 727332.0,
+   "pct": 29.52,
+   "pct_acum": 86.68
+  },
+  {
+   "causa_id": "erro_recebimento",
+   "eventos": 2335,
+   "caixas": 3922,
+   "valor_brl": 328236.0,
+   "pct": 13.32,
+   "pct_acum": 100.0
+  }
+ ],
+ "top_itens": [
+  {
+   "item_code": "23445",
+   "descricao": "CORONA EXTRA LOOSE NR - 12OZ",
+   "embalagem_id": "long_neck",
+   "classe": "A",
+   "causa_principal": "avaria_nao_baixada",
+   "eventos": 1231,
+   "valor_brl": 110496.0
+  },
+  {
+   "item_code": "96750",
+   "descricao": "CORONA EXTRA 2/12 NR - 12OZ",
+   "embalagem_id": "long_neck",
+   "classe": "A",
+   "causa_principal": "avaria_nao_baixada",
+   "eventos": 1073,
+   "valor_brl": 97440.0
+  },
+  {
+   "item_code": "96970",
+   "descricao": "HEINEKEN 2/12 NR - 12OZ",
+   "embalagem_id": "long_neck",
+   "classe": "A",
+   "causa_principal": "avaria_nao_baixada",
+   "eventos": 935,
+   "valor_brl": 90336.0
+  },
+  {
+   "item_code": "25883",
+   "descricao": "MODELO ESPECIAL 24 LOOSE NR - 12OZ",
+   "embalagem_id": "long_neck",
+   "classe": "A",
+   "causa_principal": "avaria_nao_baixada",
+   "eventos": 686,
+   "valor_brl": 67392.0
+  },
+  {
+   "item_code": "23886",
+   "descricao": "HEINEKEN LOOSE NR - 12OZ",
+   "embalagem_id": "long_neck",
+   "classe": "A",
+   "causa_principal": "avaria_nao_baixada",
+   "eventos": 645,
+   "valor_brl": 60384.0
+  },
+  {
+   "item_code": "23314",
+   "descricao": "CORONA EXTRA 18PK NR - 12OZ",
+   "embalagem_id": "long_neck",
+   "classe": "A",
+   "causa_principal": "avaria_nao_baixada",
+   "eventos": 531,
+   "valor_brl": 50016.0
+  },
+  {
+   "item_code": "96083",
+   "descricao": "HEINEKEN 4/6 NR - 12OZ",
+   "embalagem_id": "long_neck",
+   "classe": "A",
+   "causa_principal": "avaria_nao_baixada",
+   "eventos": 472,
+   "valor_brl": 47424.0
+  },
+  {
+   "item_code": "97918",
+   "descricao": "STELLA ARTOIS 2/12 NR - 11.2OZ",
+   "embalagem_id": "long_neck",
+   "classe": "A",
+   "causa_principal": "avaria_nao_baixada",
+   "eventos": 400,
+   "valor_brl": 39936.0
+  },
+  {
+   "item_code": "96741",
+   "descricao": "CORONA EXTRA 4/6 NR - 12OZ",
+   "embalagem_id": "long_neck",
+   "classe": "A",
+   "causa_principal": "avaria_nao_baixada",
+   "eventos": 384,
+   "valor_brl": 37728.0
+  },
+  {
+   "item_code": "25603",
+   "descricao": "FLYING DOG THE TRUTH 4/6NR - 12OZ",
+   "embalagem_id": "long_neck",
+   "classe": "A",
+   "causa_principal": "avaria_nao_baixada",
+   "eventos": 261,
+   "valor_brl": 28128.0
+  }
+ ],
+ "frequencia": [
+  {
+   "classe": "A",
+   "eventos_dia": 0.1144,
+   "tolerancia_eventos": 5,
+   "intervalo_dias": 14,
+   "ira_recomendada_pct": 99.3924,
+   "ira_mensal_pct": 86.6347,
+   "itens_ativos": 212,
+   "posicoes": 3,
+   "contagens_mes": 1362.8571,
+   "custo_mes_brl": 5451.4286,
+   "custo_mensal_todos_brl": 2544.0,
+   "ira_por_intervalo": {
+    "7": 99.9814,
+    "14": 99.3924,
+    "30": 86.6347,
+    "60": 31.8163,
+    "90": 5.6591
+   }
+  },
+  {
+   "classe": "B",
+   "eventos_dia": 0.0114,
+   "tolerancia_eventos": 1,
+   "intervalo_dias": 30,
+   "ira_recomendada_pct": 95.3111,
+   "ira_mensal_pct": 95.3111,
+   "itens_ativos": 296,
+   "posicoes": 2,
+   "contagens_mes": 592.0,
+   "custo_mes_brl": 2368.0,
+   "custo_mensal_todos_brl": 2368.0,
+   "ira_por_intervalo": {
+    "7": 99.6968,
+    "14": 98.8495,
+    "30": 95.3111,
+    "60": 84.9235,
+    "90": 72.5393
+   }
+  },
+  {
+   "classe": "C",
+   "eventos_dia": 0.001,
+   "tolerancia_eventos": 1,
+   "intervalo_dias": 90,
+   "ira_recomendada_pct": 99.5981,
+   "ira_mensal_pct": 99.9535,
+   "itens_ativos": 2140,
+   "posicoes": 1,
+   "contagens_mes": 713.3333,
+   "custo_mes_brl": 2853.3333,
+   "custo_mensal_todos_brl": 8560.0,
+   "ira_por_intervalo": {
+    "7": 99.9974,
+    "14": 99.9898,
+    "30": 99.9535,
+    "60": 99.8177,
+    "90": 99.5981
+   }
+  }
+ ],
+ "premissas": {
+  "cobertura_dias": {
+   "A": 10,
+   "B": 20,
+   "C": 45
+  },
+  "posicoes": {
+   "A": 3,
+   "B": 2,
+   "C": 1
+  },
+  "taxa_erro_separacao": 0.0008,
+  "taxa_erro_recebimento": 0.0003,
+  "fracao_avaria_nao_baixada": 0.25,
+  "caixas_por_erro": 2.0,
+  "tolerancia_pct": 2.0,
+  "custo_contagem_posicao_brl": 4.0,
+  "ira_meta_pct": 95.0,
+  "intervalos_dias": [
+   7,
+   14,
+   30,
+   60,
+   90
+  ]
+ },
+ "achados": {
+  "ira_a_mensal_pct": 87.01,
+  "ira_c_mensal_pct": 99.49,
+  "ira_a_modelo_mensal_pct": 86.6347,
+  "avaria_nao_baixada_pct": 57.16,
+  "intervalo_a": 14,
+  "intervalo_b": 30,
+  "intervalo_c": 90,
+  "ira_a_recomendada_pct": 99.3924,
+  "custo_recomendado_mes": 10672.7619,
+  "custo_todos_mensal_mes": 13472.0,
+  "itens_ativos": 2648
+ }
+}

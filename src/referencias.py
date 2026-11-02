@@ -82,3 +82,36 @@ JANELAS = {
 }
 
 SEED = 42
+
+# ---------------------------------------------------------------- v2: acuracidade de inventário (premissas)
+
+# Classe ABC pelo volume real (mesmos cortes da q5): A até 80% do volume, B até 95%, C o resto.
+CORTES_ABC = (0.80, 0.95)
+
+INVENTARIO = {
+    # Estoque teórico = giro mensal x cobertura em dias / 30. Itens A giram mais e ficam menos tempo.
+    "cobertura_dias": {"A": 10, "B": 20, "C": 45},
+    # Posições (endereços) por item: A tem picking e pulmão em vários pontos.
+    "posicoes": {"A": 3, "B": 2, "C": 1},
+    # Eventos de divergência por caixa movimentada.
+    "taxa_erro_separacao": 0.0008,
+    "taxa_erro_recebimento": 0.0003,
+    # Parte das avarias da v1 que não é baixada no sistema (o sistema fica com mais do que o físico).
+    "fracao_avaria_nao_baixada": 0.25,
+    # Tamanho médio de um erro, em caixas (geométrica, mínimo 1).
+    "caixas_por_erro": 2.0,
+    # Uma contagem bate se |físico - sistema| <= max(1 caixa, 2% do estoque).
+    "tolerancia_pct": 2.0,
+    # Custo de contar uma posição (mão de obra), em R$.
+    "custo_contagem_posicao_brl": 4.0,
+    # Meta de acuracidade de registro (IRA) que define a frequência recomendada.
+    "ira_meta_pct": 95.0,
+    # Intervalos de contagem possíveis, em dias.
+    "intervalos_dias": (7, 14, 30, 60, 90),
+}
+
+CAUSAS = {
+    "erro_separacao": "Erro de separação",
+    "erro_recebimento": "Erro de recebimento",
+    "avaria_nao_baixada": "Avaria não baixada",
+}

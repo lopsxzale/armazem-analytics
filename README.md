@@ -2,14 +2,14 @@
 
 **Onde um armazém de bebidas perde dinheiro, e o que fazer primeiro?** Análise de ponta a ponta (extração → banco relacional → SQL analítico → métricas em Python → site interativo) sobre a rotina de armazém: **refugo e avarias**, **acuracidade de inventário**, **validade (FEFO)** e **devoluções**. Cada achado vira uma ação concreta para o chão do armazém.
 
-> **Status:** v1 (refugo e avarias) publicada. Site: **[perdas-armazem.vercel.app](https://perdas-armazem.vercel.app/pt/)** · Resumo de 1 página: [site](https://perdas-armazem.vercel.app/pt/resumo/) · [PDF](docs/resumo-executivo.pdf) · [Markdown](docs/resumo-executivo.md)
+> **Status:** v1 (refugo e avarias) e v2 ([acuracidade de inventário](https://perdas-armazem.vercel.app/pt/inventario/)) publicadas. Site: **[perdas-armazem.vercel.app](https://perdas-armazem.vercel.app/pt/)** · Resumo de 1 página: [site](https://perdas-armazem.vercel.app/pt/resumo/) · [PDF](docs/resumo-executivo.pdf) · [Markdown](docs/resumo-executivo.md)
 
 ## Resultados da v1
 
 **Só dado real** (Montgomery County, 27 meses entre jun/2017 e ago/2026):
 
 - **O mix mudou:** a lata foi de 38% para 54% do volume e o long neck de 53% para 41%. Como lata quebra menos, qualquer taxa de avaria bruta cai sozinha com o tempo.
-- **O volume é concentrado:** 233 de 9.537 itens (2,4%) somam 80% das caixas.
+- **O volume é concentrado:** 234 de 9.537 itens (2,5%) somam 80% das caixas.
 - **Estornos são raros** (0,013% das caixas), mas o barril estorna em 26 dos 27 meses, cerca de 10× mais que as outras embalagens.
 
 **Sobre a camada simulada** (intervalos p5–p95 de 120 simulações com premissas sorteadas em faixas, `src/sensitivity.py`):
@@ -19,6 +19,14 @@
 - **A taxa bruta engana:** na separação ela sobe 31% e nas outras etapas cai 11%. **Ajustada por mix**, a separação sobe 46% e as outras ficam estáveis. A alta foi plantada (+45%) para testar o método, que a recupera com erro mediano de −1,3 p.p.; sem alta plantada, a taxa ajustada fica entre −5% e +5%.
 - Perda estimada de **R$ 210 mil por mês** (0,84% das caixas); reduzir 30% da avaria na separação economiza cerca de **R$ 27 mil por mês**.
 
+## Resultados da v2 (acuracidade de inventário)
+
+Giro e curva ABC reais; estoque, posições e divergências simulados (premissas em `src/referencias.py`, `INVENTARIO`). Resumo: [`docs/resumo-v2.md`](docs/resumo-v2.md).
+
+- **A curva A é onde o estoque erra:** contando todo mês, só 87% das contagens da A batem com o sistema (meta 95%), contra 99,5% na C. O erro por caixa é igual; a A erra mais porque movimenta mais.
+- **57% do valor divergente é avaria não baixada:** a perda da v1 que ninguém lança vira erro de estoque (premissa: 25% das avarias não são lançadas).
+- **Contagem cíclica por classe:** A a cada 14 dias, B mensal, C trimestral. A IRA da A sobe para 99% e o custo cai de R$ 13,5 mil para R$ 10,7 mil por mês. A regra (Poisson sobre o ritmo de eventos) prevê 86,6% de IRA mensal na A; a simulação mede 87,0%.
+
 ## Como rodar
 
 ```bash
@@ -27,6 +35,7 @@ pip install -r requirements.txt
 python src/extract.py      # baixa o Montgomery para data/raw/ (30 MB, fora do git)
 python src/transform.py    # cerveja e barris, embalagem pela descrição -> data/app/*.parquet
 python src/simulate.py     # avarias simuladas, seed fixo -> data/sim/avarias.parquet
+python src/simulate_inventario.py  # v2: contagens e divergências -> data/sim/
 python src/sensitivity.py  # ~2 min: achados com premissas variando -> web/src/data/sensibilidade.json
 python src/load.py         # (opcional) banco SQLite em data/armazem.db para explorar as queries
 python src/export_web.py   # roda sql/analysis/ e gera web/src/data/*.json + docs/resumo-executivo.md
@@ -61,7 +70,7 @@ O código é **público e genérico**. Os dados mudam conforme o uso:
 | Fase | Tema | Perguntas | Entrega |
 |---|---|---|---|
 | **v1** | Refugo & avarias | Quais motivos, embalagens e etapas explicam 80% da perda (Pareto)? Quanto isso custa por mês? Onde a perda está crescendo? | Pareto em SQL (window functions), custo mensal e um **simulador de economia** ("reduzir X% da avaria na etapa Y economiza R$ Z") |
-| v2 | Acuracidade de inventário | Quais SKUs e posições divergem mais entre sistema e contagem? A divergência se concentra na curva A? | Ranking de divergência por curva ABC e sugestão de frequência de contagem cíclica |
+| **v2** | Acuracidade de inventário | Quais SKUs e posições divergem mais entre sistema e contagem? A divergência se concentra na curva A? | Ranking de divergência por curva ABC e sugestão de frequência de contagem cíclica |
 | v3 | Validade / FEFO | Quais itens correm risco de vencer, dado o giro real? Quanto valor está em risco nos próximos 30/60/90 dias? | Alerta de vencimento por giro e fila de saída FEFO |
 | v4 | Devoluções / retorno | Quais motivos e rotas mais devolvem? Quanto volta como refugo? | Pareto de motivos de devolução e custo por rota |
 
@@ -122,4 +131,5 @@ Além do site, o projeto tem um resumo de **uma página** (`docs/resumo-executiv
 - [x] `src/simulate.py` com seed fixo e premissas em `src/referencias.py`
 - [x] Queries `sql/analysis/q1` a `q6`, com testes de contrato em `tests/`
 - [x] Publicar a v1
+- [x] v2: acuracidade de inventário (q9–q12, regra de frequência testada contra a simulação)
 - [ ] Atualizar o card "Lote 002 · Armazém" no portfólio, trocando "Em andamento" pelos números reais

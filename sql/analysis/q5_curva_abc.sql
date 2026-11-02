@@ -1,5 +1,5 @@
 -- Q5. A avaria se concentra nos itens de maior giro? Curva ABC por volume real x avaria.
--- A: itens que somam os primeiros 80% do volume; B: até 95%; C: o restante.
+-- A: itens até o acumulado cruzar 80% do volume (inclusive o que cruza); B: até 95%; C: o restante.
 WITH volume AS (
     SELECT item_code, SUM(caixas_movimentadas) AS caixas_movimentadas
     FROM movimentos_mensais
@@ -10,15 +10,16 @@ acumulado AS (
     SELECT
         item_code,
         caixas_movimentadas,
-        SUM(caixas_movimentadas) OVER (ORDER BY caixas_movimentadas DESC, item_code ROWS UNBOUNDED PRECEDING)
-            / SUM(caixas_movimentadas) OVER () AS fracao_acum
+        -- acumulado ANTES do item: o item que cruza o corte ainda entra na classe
+        (SUM(caixas_movimentadas) OVER (ORDER BY caixas_movimentadas DESC, item_code ROWS UNBOUNDED PRECEDING)
+            - caixas_movimentadas) / SUM(caixas_movimentadas) OVER () AS fracao_antes
     FROM volume
 ),
 classe AS (
     SELECT
         item_code,
         caixas_movimentadas,
-        CASE WHEN fracao_acum <= 0.80 THEN 'A' WHEN fracao_acum <= 0.95 THEN 'B' ELSE 'C' END AS classe
+        CASE WHEN fracao_antes < 0.80 THEN 'A' WHEN fracao_antes < 0.95 THEN 'B' ELSE 'C' END AS classe
     FROM acumulado
 ),
 perda AS (

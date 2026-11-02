@@ -2,33 +2,33 @@
  "classes": [
   {
    "classe": "A",
-   "itens": 233,
-   "caixas_movimentadas": 6419000.0,
-   "pct_volume": 79.97,
-   "caixas_avariadas": 54138,
-   "custo_brl": 4519422.0,
-   "pct_custo": 79.63,
+   "itens": 234,
+   "caixas_movimentadas": 6424746.0,
+   "pct_volume": 80.04,
+   "caixas_avariadas": 54162,
+   "custo_brl": 4520574.0,
+   "pct_custo": 79.65,
    "taxa_pct": 0.843
   },
   {
    "classe": "B",
    "itens": 588,
-   "caixas_movimentadas": 1206626.0,
-   "pct_volume": 15.03,
-   "caixas_avariadas": 10367,
-   "custo_brl": 895290.0,
+   "caixas_movimentadas": 1201613.0,
+   "pct_volume": 14.97,
+   "caixas_avariadas": 10353,
+   "custo_brl": 895098.0,
    "pct_custo": 15.77,
-   "taxa_pct": 0.859
+   "taxa_pct": 0.862
   },
   {
    "classe": "C",
-   "itens": 8716,
-   "caixas_movimentadas": 401403.0,
-   "pct_volume": 5.0,
-   "caixas_avariadas": 2921,
-   "custo_brl": 261092.0,
-   "pct_custo": 4.6,
-   "taxa_pct": 0.728
+   "itens": 8715,
+   "caixas_movimentadas": 400670.0,
+   "pct_volume": 4.99,
+   "caixas_avariadas": 2911,
+   "custo_brl": 260132.0,
+   "pct_custo": 4.58,
+   "taxa_pct": 0.727
   }
  ],
  "top_itens": [

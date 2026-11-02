@@ -2,6 +2,9 @@
 -- Volumes (itens, movimentos_mensais) são reais (Montgomery County).
 -- Avarias e preços são simulados (ver src/referencias.py).
 
+DROP TABLE IF EXISTS divergencias;
+DROP TABLE IF EXISTS contagens;
+DROP TABLE IF EXISTS causas_divergencia;
 DROP TABLE IF EXISTS avarias;
 DROP TABLE IF EXISTS movimentos_mensais;
 DROP TABLE IF EXISTS itens;
@@ -57,6 +60,31 @@ CREATE TABLE avarias (
     motivo_id TEXT NOT NULL REFERENCES motivos (motivo_id),
     caixas    INTEGER NOT NULL CHECK (caixas > 0),
     PRIMARY KEY (periodo, item_code, etapa_id, motivo_id)
+);
+
+-- v2: acuracidade de inventário (simulado sobre o giro real)
+
+CREATE TABLE causas_divergencia (
+    causa_id TEXT PRIMARY KEY,
+    nome     TEXT NOT NULL
+);
+
+CREATE TABLE contagens (
+    periodo         TEXT NOT NULL,
+    item_code       TEXT NOT NULL REFERENCES itens (item_code),
+    classe          TEXT NOT NULL CHECK (classe IN ('A', 'B', 'C')),
+    estoque_sistema INTEGER NOT NULL,
+    posicoes        INTEGER NOT NULL,
+    PRIMARY KEY (periodo, item_code)
+);
+
+CREATE TABLE divergencias (
+    periodo   TEXT NOT NULL,
+    item_code TEXT NOT NULL REFERENCES itens (item_code),
+    causa_id  TEXT NOT NULL REFERENCES causas_divergencia (causa_id),
+    eventos   INTEGER NOT NULL CHECK (eventos > 0),
+    caixas    INTEGER NOT NULL,  -- físico - sistema (negativo = falta)
+    PRIMARY KEY (periodo, item_code, causa_id)
 );
 
 CREATE INDEX ix_avarias_periodo ON avarias (periodo);

@@ -26,6 +26,7 @@ ROOT_DIR = Path(__file__).resolve().parent.parent
 SQL_DIR = ROOT_DIR / "sql" / "analysis"
 WEB_DATA_DIR = ROOT_DIR / "web" / "src" / "data"
 RESUMO = ROOT_DIR / "docs" / "resumo-executivo.md"
+RESUMO_V2 = ROOT_DIR / "docs" / "resumo-v2.md"
 SENSIBILIDADE = WEB_DATA_DIR / "sensibilidade.json"  # gerado por src/sensitivity.py (roda antes deste script)
 
 QUERIES = {
@@ -37,6 +38,10 @@ QUERIES = {
     "q6": "q6_top_itens",
     "q7": "q7_mix_embalagem",
     "q8": "q8_estornos",
+    "q9": "q9_ira_por_classe",
+    "q10": "q10_divergencia_itens",
+    "q11": "q11_causas",
+    "q12": "q12_base_frequencia",
 }
 REDUCAO_PADRAO = 30  # % de redução usada nos achados e no valor inicial do simulador
 PRECOS = {k: v["preco_caixa_brl"] for k, v in ref.EMBALAGENS.items()}
@@ -196,6 +201,37 @@ def build_abc(q: dict[str, pd.DataFrame]) -> dict:
     return {"classes": records(q["q5"]), "top_itens": records(q["q6"])}
 
 
+def build_inventario(q: dict[str, pd.DataFrame]) -> dict:
+    """v2: IRA por classe, causas, itens que mais divergem e a frequência de contagem recomendada."""
+    p = ref.INVENTARIO
+    freq = metrics.frequencia_recomendada(q["q12"], p)
+    freq["ira_por_intervalo"] = [{str(d): v for d, v in o.items()} for o in freq["ira_por_intervalo"]]
+    ira = q["q9"].set_index("classe")
+    causas = q["q11"].set_index("causa_id")
+    fa = freq.set_index("classe")
+    return {
+        "ira": records(q["q9"]),
+        "causas": records(q["q11"][["causa_id", "eventos", "caixas", "valor_brl", "pct", "pct_acum"]]),
+        "top_itens": records(q["q10"]),
+        "frequencia": records(freq),
+        "premissas": {k: v for k, v in p.items() if k != "intervalos_dias"}
+        | {"intervalos_dias": list(p["intervalos_dias"])},
+        "achados": {
+            "ira_a_mensal_pct": ira.loc["A", "ira_pct"],
+            "ira_c_mensal_pct": ira.loc["C", "ira_pct"],
+            "ira_a_modelo_mensal_pct": fa.loc["A", "ira_mensal_pct"],
+            "avaria_nao_baixada_pct": causas.loc["avaria_nao_baixada", "pct"],
+            "intervalo_a": int(fa.loc["A", "intervalo_dias"]),
+            "intervalo_b": int(fa.loc["B", "intervalo_dias"]),
+            "intervalo_c": int(fa.loc["C", "intervalo_dias"]),
+            "ira_a_recomendada_pct": fa.loc["A", "ira_recomendada_pct"],
+            "custo_recomendado_mes": freq["custo_mes_brl"].sum(),
+            "custo_todos_mensal_mes": freq["custo_mensal_todos_brl"].sum(),
+            "itens_ativos": int(freq["itens_ativos"].sum()),
+        },
+    }
+
+
 def build_simulador(cm: pd.DataFrame) -> dict:
     return {
         "caixas_mes": records(cm),
@@ -336,6 +372,41 @@ Premissa: preço médio por caixa de {", ".join(f"{v['nome'].lower()} {brl(v['pr
     return RESUMO
 
 
+def write_resumo_v2(inv: dict) -> Path:
+    a, p = inv["achados"], inv["premissas"]
+    linhas = "\n".join(
+        f"| {f['classe']} | {f['itens_ativos']} | a cada {f['intervalo_dias']} dias | {pct(f['ira_mensal_pct'])} → {pct(f['ira_recomendada_pct'])} | {brl(f['custo_mes_brl'])} |"
+        for f in inv["frequencia"]
+    )
+    texto = f"""# Resumo executivo · Armazém Analytics v2 (acuracidade de inventário)
+
+> Giro e classe ABC **reais** (Montgomery County). Estoque em sistema, posições e divergências **simulados**
+> (premissas em `src/referencias.py`, `INVENTARIO`). Gerado por `src/export_web.py`.
+
+## 3 achados
+
+1. **A curva A é onde o estoque erra:** contando todo mês, a IRA (contagens que batem com o sistema) é {pct(a["ira_a_mensal_pct"])} na A e {pct(a["ira_c_mensal_pct"], 1)} na C. Erro por caixa é igual nas classes; a A erra mais porque movimenta mais.
+2. **{pct(a["avaria_nao_baixada_pct"])} do valor divergente é avaria não baixada:** a perda da v1 que ninguém lança vira erro de estoque. Depende da premissa de que {pct(p["fracao_avaria_nao_baixada"] * 100)} das avarias não são lançadas.
+3. **O modelo bate com a simulação:** a regra de frequência prevê {pct(a["ira_a_modelo_mensal_pct"], 1)} de IRA mensal na A, contra {pct(a["ira_a_mensal_pct"], 1)} medidos.
+
+## Frequência recomendada (meta de IRA {pct(p["ira_meta_pct"])})
+
+| Classe | Itens ativos | Contagem | IRA (mensal → recomendada) | Custo/mês |
+|---|---|---|---|---|
+{linhas}
+
+**Total:** {brl(a["custo_recomendado_mes"])} por mês, contra {brl(a["custo_todos_mensal_mes"])} contando tudo todo mês, com a IRA da curva A subindo para {pct(a["ira_a_recomendada_pct"])}.
+
+## Ações
+
+1. **Baixa de avaria no ato:** registrar a avaria na hora em que acontece (liga a v1 à v2).
+2. **Contagem cíclica por classe:** A a cada {a["intervalo_a"]} dias, B a cada {a["intervalo_b"]}, C a cada {a["intervalo_c"]}.
+3. **Indicador:** acompanhar a IRA por classe, não a média geral, que esconde a curva A atrás de milhares de itens C.
+"""
+    RESUMO_V2.write_text(texto, encoding="utf-8")
+    return RESUMO_V2
+
+
 def main() -> None:
     con = load.build(":memory:")
     q = run_queries(con)
@@ -346,6 +417,7 @@ def main() -> None:
     tendencia = build_tendencia(q)
     findings = build_findings(meta, pareto, matriz, tendencia, cm)
     real = build_real(q)
+    inventario = build_inventario(q)
     sens = json.loads(SENSIBILIDADE.read_text(encoding="utf-8"))
     payloads = {
         "meta": meta,
@@ -355,6 +427,7 @@ def main() -> None:
         "tendencia": tendencia,
         "abc": build_abc(q),
         "real": real,
+        "inventario": inventario,
         "simulador": build_simulador(cm),
         "findings": findings,
         "sql": build_sql(),
@@ -362,6 +435,7 @@ def main() -> None:
     for nome, payload in payloads.items():
         write(nome, payload)
     write_resumo(meta, findings, real, sens)
+    write_resumo_v2(inventario)
     con.close()
     print(f"{len(payloads)} JSONs em {WEB_DATA_DIR} e resumo em {RESUMO}")
 

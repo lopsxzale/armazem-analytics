@@ -9,7 +9,7 @@ import { useI18n } from "./providers";
 
 const SECTIONS = ["summary", "real", "pareto", "packaging", "monthly", "trend", "abc", "robust", "simulator", "method"] as const;
 
-function useActiveSection() {
+function useActiveSection(sections: readonly string[]) {
   const [active, setActive] = useState<string>("");
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -18,12 +18,12 @@ function useActiveSection() {
       },
       { rootMargin: "-45% 0px -50% 0px" },
     );
-    SECTIONS.forEach((id) => {
+    sections.forEach((id) => {
       const el = document.getElementById(id);
       if (el) observer.observe(el);
     });
     return () => observer.disconnect();
-  }, []);
+  }, [sections]);
   return active;
 }
 
@@ -64,9 +64,19 @@ function ThemeToggle({ label }: { label: string }) {
   );
 }
 
-export function Header() {
+export function Header({
+  sections = SECTIONS,
+  labels,
+  page = "v1",
+}: {
+  sections?: readonly string[];
+  labels?: Record<string, string>;
+  page?: "v1" | "v2";
+} = {}) {
   const { lang, t } = useI18n();
-  const active = useActiveSection();
+  const active = useActiveSection(sections);
+  const label = (id: string) => labels?.[id] ?? (t.nav as Record<string, string>)[id];
+  const subpath = page === "v2" ? "inventario/" : "";
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { scrollYProgress } = useScroll();
@@ -117,9 +127,25 @@ export function Header() {
             <span className="hidden sm:inline">{t.brand}</span>
           </button>
 
-          <nav aria-label="Seções" className="ml-auto hidden xl:block">
+          {/* Troca de página: v1 (avarias) e v2 (inventário) */}
+          <div className="hidden items-center rounded-full bg-surface-2 p-1 text-xs md:flex">
+            {(["v1", "v2"] as const).map((v) => (
+              <Link
+                key={v}
+                href={v === "v1" ? `/${lang}/` : `/${lang}/inventario/`}
+                aria-current={page === v ? "page" : undefined}
+                className={`rounded-full px-3 py-1 font-medium transition ${
+                  page === v ? "bg-surface text-ink shadow-sm ring-1 ring-line" : "text-muted hover:text-ink"
+                }`}
+              >
+                {v === "v1" ? t.inv.switchV1 : t.inv.switchV2}
+              </Link>
+            ))}
+          </div>
+
+          <nav aria-label="Seções" className="ml-auto hidden 2xl:block">
             <ul className="flex items-center gap-1 text-sm">
-              {SECTIONS.map((id) => (
+              {sections.map((id) => (
                 <li key={id}>
                   <a
                     href={`#${id}`}
@@ -139,16 +165,16 @@ export function Header() {
                         transition={{ type: "spring", bounce: 0.15, duration: 0.5 }}
                       />
                     )}
-                    <span className="relative">{t.nav[id]}</span>
+                    <span className="relative">{label(id)}</span>
                   </a>
                 </li>
               ))}
             </ul>
           </nav>
 
-          <div className="ml-auto flex items-center gap-1 xl:ml-2">
+          <div className="ml-auto flex items-center gap-1 2xl:ml-2">
             <Link
-              href={`/${otherLang}/`}
+              href={`/${otherLang}/${subpath}`}
               hrefLang={otherLang}
               prefetch={false}
               aria-label={t.nav.language}
@@ -163,7 +189,7 @@ export function Header() {
               aria-expanded={open}
               aria-controls="mobile-menu"
               aria-label={open ? t.nav.close : t.nav.menu}
-              className="grid size-9 place-items-center rounded-full text-ink transition hover:bg-surface-2 xl:hidden"
+              className="grid size-9 place-items-center rounded-full text-ink transition hover:bg-surface-2 2xl:hidden"
             >
               <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden>
                 <motion.path
@@ -194,14 +220,25 @@ export function Header() {
           <motion.nav
             id="mobile-menu"
             aria-label={t.nav.menu}
-            className="fixed inset-0 z-40 bg-page/95 px-6 pt-24 backdrop-blur-xl overflow-y-auto pb-10 xl:hidden"
+            className="fixed inset-0 z-40 bg-page/95 px-6 pt-24 backdrop-blur-xl overflow-y-auto pb-10 2xl:hidden"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
+            <div className="mb-6 flex gap-2 text-sm">
+              {(["v1", "v2"] as const).map((v) => (
+                <Link
+                  key={v}
+                  href={v === "v1" ? `/${lang}/` : `/${lang}/inventario/`}
+                  className={`rounded-full px-3 py-1.5 font-medium ring-1 ring-line ${page === v ? "bg-surface-2 text-ink" : "text-muted"}`}
+                >
+                  {v === "v1" ? t.inv.switchV1 : t.inv.switchV2}
+                </Link>
+              ))}
+            </div>
             <ul className="space-y-1">
-              {SECTIONS.map((id, i) => (
+              {sections.map((id, i) => (
                 <motion.li
                   key={id}
                   initial={{ opacity: 0, y: 16 }}
@@ -217,7 +254,7 @@ export function Header() {
                     className="flex items-baseline gap-4 border-b border-line py-3 text-xl font-semibold tracking-tight text-ink"
                   >
                     <span className="font-mono text-xs text-muted">{String(i).padStart(2, "0")}</span>
-                    {t.nav[id]}
+                    {label(id)}
                   </a>
                 </motion.li>
               ))}

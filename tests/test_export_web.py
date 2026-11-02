@@ -46,6 +46,7 @@ def test_todos_os_arquivos_que_o_site_importa_existem(site):
         "tendencia",
         "abc",
         "real",
+        "inventario",
         "simulador",
         "findings",
         "sensibilidade",
@@ -140,3 +141,13 @@ def test_sensibilidade_coerente(site):
         assert faixa["p5"] <= faixa["p50"] <= faixa["p95"]
     # Sem tendência plantada, a taxa ajustada da separação fica perto de zero.
     assert abs(s["nulo"]["foco_var_ajustada_pct"]["p50"]) < 5
+
+
+def test_inventario_modelo_bate_com_simulacao(site):
+    a = site["inventario"]["achados"]
+    # A regra de frequência (Poisson) prevê a IRA mensal que a simulação mede.
+    assert a["ira_a_modelo_mensal_pct"] == pytest.approx(a["ira_a_mensal_pct"], abs=3)
+    freq = pd.DataFrame(site["inventario"]["frequencia"])
+    assert (freq["ira_recomendada_pct"] >= ref.INVENTARIO["ira_meta_pct"]).all()
+    causas = pd.DataFrame(site["inventario"]["causas"])
+    assert causas["pct"].sum() == pytest.approx(100, abs=0.05)

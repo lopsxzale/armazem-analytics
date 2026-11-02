@@ -2,6 +2,7 @@
 // Convenção: campos *_pct já estão em pontos percentuais (26.8 = 26,8%).
 import abcJson from "@/data/abc.json";
 import findingsJson from "@/data/findings.json";
+import inventarioJson from "@/data/inventario.json";
 import matrizJson from "@/data/matriz.json";
 import mensalJson from "@/data/mensal.json";
 import metaJson from "@/data/meta.json";
@@ -202,7 +203,69 @@ export type Findings = {
   custo_medio_mensal_brl: number;
 };
 
-export type SqlId = "q1" | "q2" | "q3" | "q4" | "q5" | "q6" | "q7" | "q8";
+export type SqlId = "q1" | "q2" | "q3" | "q4" | "q5" | "q6" | "q7" | "q8" | "q9" | "q10" | "q11" | "q12";
+
+export type AbcClass = "A" | "B" | "C";
+export type Cause = "erro_separacao" | "erro_recebimento" | "avaria_nao_baixada";
+export type Inventory = {
+  ira: {
+    classe: AbcClass;
+    contagens: number;
+    ira_pct: number;
+    eventos_por_contagem: number;
+    caixas_divergentes: number;
+    estoque_medio: number;
+  }[];
+  causas: { causa_id: Cause; eventos: number; caixas: number; valor_brl: number; pct: number; pct_acum: number }[];
+  top_itens: {
+    item_code: string;
+    descricao: string;
+    embalagem_id: Package;
+    classe: AbcClass;
+    causa_principal: Cause;
+    eventos: number;
+    valor_brl: number;
+  }[];
+  frequencia: {
+    classe: AbcClass;
+    eventos_dia: number;
+    tolerancia_eventos: number;
+    intervalo_dias: number;
+    ira_recomendada_pct: number;
+    ira_mensal_pct: number;
+    itens_ativos: number;
+    posicoes: number;
+    contagens_mes: number;
+    custo_mes_brl: number;
+    custo_mensal_todos_brl: number;
+    ira_por_intervalo: Record<string, number>;
+  }[];
+  premissas: {
+    cobertura_dias: Record<AbcClass, number>;
+    posicoes: Record<AbcClass, number>;
+    taxa_erro_separacao: number;
+    taxa_erro_recebimento: number;
+    fracao_avaria_nao_baixada: number;
+    caixas_por_erro: number;
+    tolerancia_pct: number;
+    custo_contagem_posicao_brl: number;
+    ira_meta_pct: number;
+    intervalos_dias: number[];
+  };
+  achados: {
+    ira_a_mensal_pct: number;
+    ira_c_mensal_pct: number;
+    ira_a_modelo_mensal_pct: number;
+    avaria_nao_baixada_pct: number;
+    intervalo_a: number;
+    intervalo_b: number;
+    intervalo_c: number;
+    ira_a_recomendada_pct: number;
+    custo_recomendado_mes: number;
+    custo_todos_mensal_mes: number;
+    itens_ativos: number;
+  };
+};
 export type SqlFile = { arquivo: string; titulo: string; sql: string };
 
 export const meta = metaJson as Meta;
@@ -216,3 +279,4 @@ export const findings = findingsJson as Findings;
 export const sqlFiles = sqlJson as Record<SqlId, SqlFile>;
 export const real = realJson as Real;
 export const sensitivity = sensJson as Sensitivity;
+export const inventory = inventarioJson as Inventory;

@@ -21,8 +21,10 @@ def test_itens_ate_80():
 def test_curva_abc():
     volumes = pd.Series({"x": 70.0, "y": 10.0, "z": 15.0, "w": 5.0})
     classe = metrics.curva_abc(volumes)
-    # acumulado: x 70%, z 85%, y 95% (corte inclusivo, como no SQL), w 100%
-    assert classe.to_dict() == {"x": "A", "y": "B", "z": "B", "w": "C"}
+    # acumulado antes de cada item: x 0%, z 70%, y 85%, w 95%
+    assert classe.to_dict() == {"x": "A", "z": "A", "y": "B", "w": "C"}
+    # um item que sozinho passa de 80% continua sendo A
+    assert metrics.curva_abc(pd.Series({"g": 90.0, "p": 10.0}))["g"] == "A"
 
 
 def test_custo_avaria():
