@@ -198,6 +198,18 @@ html.lenis body {
   color: var(--shiki-dark) !important;
 }
 
+/* Resumo de 1 página: papel branco e A4 na impressão, qualquer que seja o tema. */
+@media print {
+  html,
+  body {
+    background: #fff !important;
+  }
+  @page {
+    size: A4;
+    margin: 14mm;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

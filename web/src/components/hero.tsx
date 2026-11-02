@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useMotionTemplate, useMotionValue, useSpring } from "motion/react";
+import Link from "next/link";
 import { useRef, type ReactNode } from "react";
 import { meta } from "@/lib/data";
 import { fill } from "@/lib/format";
@@ -35,7 +36,7 @@ function Magnetic({ children }: { children: ReactNode }) {
 }
 
 export function Hero() {
-  const { t, f } = useI18n();
+  const { lang, t, f } = useI18n();
   const mx = useMotionValue(50);
   const my = useMotionValue(30);
   const spotlight = useMotionTemplate`radial-gradient(600px circle at ${mx}% ${my}%, var(--glow-a), transparent 60%)`;
@@ -157,6 +158,12 @@ export function Hero() {
             </Magnetic>
           )}
         </div>
+
+        <p style={{ animationDelay: "0.55s" }} className="rise mt-4 text-sm">
+          <Link href={`/${lang}/resumo/`} className="text-ink-2 underline decoration-line underline-offset-4 transition hover:text-ink">
+            {t.hero.onePager} →
+          </Link>
+        </p>
 
         <motion.dl
           initial="hidden"

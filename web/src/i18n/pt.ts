@@ -32,6 +32,7 @@ export const pt = {
     ctaPrimary: "Ver os achados",
     ctaSimulator: "Simular economia",
     ctaSecondary: "Código no GitHub",
+    onePager: "Resumo de 1 página",
     simulatedBadge: "Avarias simuladas · volumes reais",
     kpis: {
       monthly: "Perda estimada por mês",
@@ -72,6 +73,7 @@ export const pt = {
     estTitle: "Estornos por embalagem",
     estSubtitle: "% das caixas que voltaram (lançamentos negativos)",
     months: "meses com estorno",
+    mixFact: "A lata foi de {canStart} para {canEnd} do volume entre {y0} e {y1}; como lata quebra menos, a taxa bruta de avaria cai sozinha.",
     concTitle: "Concentração do volume",
     concText: "{a} de {total} itens (curva A) somam {pct} das caixas movimentadas.",
     estText: "Estornos são raros ({rate} das caixas), mas o barril estorna em {months} dos {all} meses.",
@@ -288,6 +290,14 @@ export const pt = {
     github: "GitHub",
     email: "E-mail",
     cv: "Currículo",
+  },
+  onePager: {
+    title: "Resumo de 1 página",
+    back: "Voltar ao site",
+    print: "Imprimir / salvar PDF",
+    source: "Volumes reais de cerveja e barris (Montgomery County, {start} a {end}, {months} meses com dado). Avarias e preços simulados; intervalos de {runs} simulações com premissas variando.",
+    combos80: "combinações motivo × etapa explicam 80% da perda",
+    findings: "3 achados (camada simulada)",
   },
   footer: {
     data: "Dados: Montgomery County Open Data (volumes) · FAO (referência de perda) · avarias e preços simulados.",

@@ -33,6 +33,7 @@ export const en: Dictionary = {
     ctaPrimary: "See the findings",
     ctaSimulator: "Simulate savings",
     ctaSecondary: "Code on GitHub",
+    onePager: "One-page summary",
     simulatedBadge: "Simulated damage · real volumes",
     kpis: {
       monthly: "Estimated loss per month",
@@ -73,6 +74,7 @@ export const en: Dictionary = {
     estTitle: "Reversals by package",
     estSubtitle: "% of cases that came back (negative entries)",
     months: "months with reversals",
+    mixFact: "Cans went from {canStart} to {canEnd} of the volume between {y0} and {y1}; since cans break less, the raw damage rate falls on its own.",
     concTitle: "Volume concentration",
     concText: "{a} of {total} items (class A) make up {pct} of cases moved.",
     estText: "Reversals are rare ({rate} of cases), but kegs show them in {months} of {all} months.",
@@ -289,6 +291,14 @@ export const en: Dictionary = {
     github: "GitHub",
     email: "Email",
     cv: "Résumé",
+  },
+  onePager: {
+    title: "One-page summary",
+    back: "Back to the site",
+    print: "Print / save as PDF",
+    source: "Real beer and keg volumes (Montgomery County, {start} to {end}, {months} months of data). Simulated damage and prices; ranges from {runs} simulations with varying assumptions.",
+    combos80: "reason × stage combinations explain 80% of the loss",
+    findings: "3 findings (simulated layer)",
   },
   footer: {
     data: "Data: Montgomery County Open Data (volumes) · FAO (loss reference) · simulated damage and prices.",
