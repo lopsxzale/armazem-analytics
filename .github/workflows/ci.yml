@@ -7,18 +7,33 @@ on:
 
 jobs:
   python:
-    name: Pipeline (lint + testes)
+    name: Pipeline (lint + testes + paridade PostgreSQL)
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: armazem
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      # Com DATABASE_URL, tests/test_sql_parity.py roda todas as queries também no PostgreSQL.
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/armazem
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
           cache: pip
       - run: pip install -r requirements.txt
       - run: ruff check .
       - run: ruff format --check .
-      # Métricas, ETL e o contrato dos JSONs versionados em web/src/data.
+      # Métricas, ETL, contrato dos JSONs versionados em web/src/data e paridade SQLite x PostgreSQL.
       - run: pytest -q
 
   web:
@@ -28,8 +43,8 @@ jobs:
       run:
         working-directory: web
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm

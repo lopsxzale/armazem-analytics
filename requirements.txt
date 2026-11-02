@@ -3,3 +3,4 @@ pyarrow
 requests
 pytest
 ruff
+psycopg[binary]

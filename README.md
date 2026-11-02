@@ -73,7 +73,7 @@ Montgomery (dado aberto) ──► src/extract.py ──► data/raw/ ──► 
 src/simulate.py (seed fixo, premissas em src/referencias.py) ──► data/sim/   data/private/ (só local)
                                            │                       │
                                            ▼                       ▼
-                    src/load.py ──► SQLite (DDL compatível com PostgreSQL)
+                    src/load.py ──► SQLite ou PostgreSQL (DATABASE_URL), paridade testada no CI
                                            │
                                            ▼
                          sql/analysis/ (uma query por pergunta)
@@ -102,7 +102,7 @@ armazem-analytics/
 └── web/            # site Next.js
 ```
 
-**Stack:** Python 3.11+, pandas, NumPy, SQLite (DDL compatível com PostgreSQL), SQL (CTEs e window functions), pytest, ruff, GitHub Actions, Next.js. É o mesmo padrão do [`logistics-distribution-analytics`](https://github.com/lopsxzale/logistics-distribution-analytics).
+**Stack:** Python 3.11+, pandas, NumPy, SQLite e PostgreSQL (mesmo schema e queries, paridade testada no CI), SQL (CTEs e window functions), pytest, ruff, GitHub Actions, Next.js. É o mesmo padrão do [`logistics-distribution-analytics`](https://github.com/lopsxzale/logistics-distribution-analytics).
 
 ## Resumo executivo
 
