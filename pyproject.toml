@@ -1,0 +1,21 @@
+[project]
+name = "armazem-analytics"
+version = "1.0.0"
+description = "Onde um armazém de bebidas perde dinheiro: refugo e avarias, do dado aberto ao site"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+extend-exclude = ["web"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM"]
+ignore = ["E501"]  # comprimento de linha é responsabilidade do `ruff format`; textos longos ficam inteiros
+
+[tool.ruff.lint.isort]
+known-first-party = ["export_web", "extract", "load", "metrics", "referencias", "simulate", "transform"]

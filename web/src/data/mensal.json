@@ -1,0 +1,220 @@
+{
+ "meses": [
+  {
+   "periodo": "2017-06",
+   "caixas_movimentadas": 361301.0,
+   "caixas_avariadas": 2904,
+   "custo_brl": 246472.0,
+   "taxa_pct": 0.804,
+   "meses_desde_anterior": null
+  },
+  {
+   "periodo": "2017-07",
+   "caixas_movimentadas": 302243.0,
+   "caixas_avariadas": 2531,
+   "custo_brl": 218324.0,
+   "taxa_pct": 0.837,
+   "meses_desde_anterior": 1.0
+  },
+  {
+   "periodo": "2017-08",
+   "caixas_movimentadas": 361290.0,
+   "caixas_avariadas": 2973,
+   "custo_brl": 251474.0,
+   "taxa_pct": 0.823,
+   "meses_desde_anterior": 1.0
+  },
+  {
+   "periodo": "2017-09",
+   "caixas_movimentadas": 285188.0,
+   "caixas_avariadas": 2324,
+   "custo_brl": 200850.0,
+   "taxa_pct": 0.815,
+   "meses_desde_anterior": 1.0
+  },
+  {
+   "periodo": "2017-10",
+   "caixas_movimentadas": 283012.0,
+   "caixas_avariadas": 2318,
+   "custo_brl": 199326.0,
+   "taxa_pct": 0.819,
+   "meses_desde_anterior": 1.0
+  },
+  {
+   "periodo": "2017-11",
+   "caixas_movimentadas": 311028.0,
+   "caixas_avariadas": 2677,
+   "custo_brl": 233762.0,
+   "taxa_pct": 0.861,
+   "meses_desde_anterior": 1.0
+  },
+  {
+   "periodo": "2017-12",
+   "caixas_movimentadas": 280330.0,
+   "caixas_avariadas": 2371,
+   "custo_brl": 203186.0,
+   "taxa_pct": 0.846,
+   "meses_desde_anterior": 1.0
+  },
+  {
+   "periodo": "2018-01",
+   "caixas_movimentadas": 234847.0,
+   "caixas_avariadas": 1959,
+   "custo_brl": 165462.0,
+   "taxa_pct": 0.834,
+   "meses_desde_anterior": 1.0
+  },
+  {
+   "periodo": "2018-02",
+   "caixas_movimentadas": 238989.0,
+   "caixas_avariadas": 1958,
+   "custo_brl": 168082.0,
+   "taxa_pct": 0.819,
+   "meses_desde_anterior": 1.0
+  },
+  {
+   "periodo": "2019-01",
+   "caixas_movimentadas": 256037.0,
+   "caixas_avariadas": 2115,
+   "custo_brl": 179802.0,
+   "taxa_pct": 0.826,
+   "meses_desde_anterior": 11.0
+  },
+  {
+   "periodo": "2019-02",
+   "caixas_movimentadas": 221289.0,
+   "caixas_avariadas": 1814,
+   "custo_brl": 154606.0,
+   "taxa_pct": 0.82,
+   "meses_desde_anterior": 1.0
+  },
+  {
+   "periodo": "2019-03",
+   "caixas_movimentadas": 267598.0,
+   "caixas_avariadas": 2201,
+   "custo_brl": 187144.0,
+   "taxa_pct": 0.823,
+   "meses_desde_anterior": 1.0
+  },
+  {
+   "periodo": "2019-04",
+   "caixas_movimentadas": 273368.0,
+   "caixas_avariadas": 2347,
+   "custo_brl": 200010.0,
+   "taxa_pct": 0.859,
+   "meses_desde_anterior": 1.0
+  },
+  {
+   "periodo": "2019-05",
+   "caixas_movimentadas": 352354.0,
+   "caixas_avariadas": 2939,
+   "custo_brl": 251892.0,
+   "taxa_pct": 0.834,
+   "meses_desde_anterior": 1.0
+  },
+  {
+   "periodo": "2019-06",
+   "caixas_movimentadas": 325916.0,
+   "caixas_avariadas": 2841,
+   "custo_brl": 237308.0,
+   "taxa_pct": 0.872,
+   "meses_desde_anterior": 1.0
+  },
+  {
+   "periodo": "2019-07",
+   "caixas_movimentadas": 360088.0,
+   "caixas_avariadas": 3079,
+   "custo_brl": 262316.0,
+   "taxa_pct": 0.855,
+   "meses_desde_anterior": 1.0
+  },
+  {
+   "periodo": "2019-08",
+   "caixas_movimentadas": 336566.0,
+   "caixas_avariadas": 2807,
+   "custo_brl": 234220.0,
+   "taxa_pct": 0.834,
+   "meses_desde_anterior": 1.0
+  },
+  {
+   "periodo": "2019-09",
+   "caixas_movimentadas": 298791.0,
+   "caixas_avariadas": 2542,
+   "custo_brl": 214576.0,
+   "taxa_pct": 0.851,
+   "meses_desde_anterior": 1.0
+  },
+  {
+   "periodo": "2019-10",
+   "caixas_movimentadas": 316142.0,
+   "caixas_avariadas": 2570,
+   "custo_brl": 214184.0,
+   "taxa_pct": 0.813,
+   "meses_desde_anterior": 1.0
+  },
+  {
+   "periodo": "2019-11",
+   "caixas_movimentadas": 270450.0,
+   "caixas_avariadas": 2326,
+   "custo_brl": 195184.0,
+   "taxa_pct": 0.86,
+   "meses_desde_anterior": 1.0
+  },
+  {
+   "periodo": "2020-01",
+   "caixas_movimentadas": 257329.0,
+   "caixas_avariadas": 2162,
+   "custo_brl": 183256.0,
+   "taxa_pct": 0.84,
+   "meses_desde_anterior": 2.0
+  },
+  {
+   "periodo": "2020-03",
+   "caixas_movimentadas": 297803.0,
+   "caixas_avariadas": 2403,
+   "custo_brl": 198004.0,
+   "taxa_pct": 0.807,
+   "meses_desde_anterior": 2.0
+  },
+  {
+   "periodo": "2020-07",
+   "caixas_movimentadas": 388221.0,
+   "caixas_avariadas": 3266,
+   "custo_brl": 271986.0,
+   "taxa_pct": 0.841,
+   "meses_desde_anterior": 4.0
+  },
+  {
+   "periodo": "2020-09",
+   "caixas_movimentadas": 333264.0,
+   "caixas_avariadas": 2883,
+   "custo_brl": 236292.0,
+   "taxa_pct": 0.865,
+   "meses_desde_anterior": 2.0
+  },
+  {
+   "periodo": "2026-06",
+   "caixas_movimentadas": 301327.0,
+   "caixas_avariadas": 2650,
+   "custo_brl": 210192.0,
+   "taxa_pct": 0.879,
+   "meses_desde_anterior": 69.0
+  },
+  {
+   "periodo": "2026-07",
+   "caixas_movimentadas": 275535.0,
+   "caixas_avariadas": 2403,
+   "custo_brl": 194972.0,
+   "taxa_pct": 0.872,
+   "meses_desde_anterior": 1.0
+  },
+  {
+   "periodo": "2026-08",
+   "caixas_movimentadas": 236722.0,
+   "caixas_avariadas": 2063,
+   "custo_brl": 162922.0,
+   "taxa_pct": 0.871,
+   "meses_desde_anterior": 1.0
+  }
+ ]
+}

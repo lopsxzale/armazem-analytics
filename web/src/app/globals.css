@@ -1,0 +1,215 @@
+@import "tailwindcss";
+
+/* Tema controlado por data-theme no <html>; sem ele, segue o sistema. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* Paleta: neutros quentes + âmbar de armazém (interface). Dados usam a paleta validada da skill dataviz. */
+:root {
+  color-scheme: light;
+  --page: #f6f5f1;
+  --surface: #fdfcfa;
+  --surface-2: #efede6;
+  --ink: #0b0b0b;
+  --ink-2: #514e47;
+  --muted: #726e65;
+  --grid: #e4e1d8;
+  --axis: #c4c0b4;
+  --ring: rgba(11, 11, 11, 0.1);
+  --glow-a: rgba(245, 158, 11, 0.2);
+  --glow-b: rgba(234, 88, 12, 0.1);
+
+  --brand: #f59e0b;
+  --brand-ink: #0b0b0b;
+  --accent-ink: #9a4a06;
+  --good: #006300;
+
+  /* Embalagens: slots 1-4 da paleta categórica, ordem fixa (validada: CVD ΔE ≥ 8,4). */
+  --pk-long_neck: #2a78d6;
+  --pk-lata: #eb6834;
+  --pk-barril: #1baf7a;
+  --pk-outras: #eda100;
+  /* Série única (Pareto, custo mensal) e destaque de tendência. */
+  --series-1: #2a78d6;
+  --series-focus: #eb6834;
+  --series-rest: #b3afa4;
+  /* Sequencial (mapa de calor): um matiz, claro -> escuro. */
+  --seq-0: #edf3fb;
+  --seq-1: #cde2fb;
+  --seq-2: #9ec5f4;
+  --seq-3: #5598e7;
+  --seq-4: #256abf;
+  --seq-5: #104281;
+  /* Texto sobre cada passo do sequencial (claro sobre escuro e vice-versa). */
+  --seq-ink-0: #0b0b0b;
+  --seq-ink-1: #0b0b0b;
+  --seq-ink-2: #0b0b0b;
+  --seq-ink-3: #ffffff;
+  --seq-ink-4: #ffffff;
+  --seq-ink-5: #ffffff;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #0d0c0a;
+  --surface: #17150f;
+  --surface-2: #211e17;
+  --ink: #f1efe9;
+  --ink-2: #c6c1b5;
+  --muted: #98938a;
+  --grid: #2a2720;
+  --axis: #3b372e;
+  --ring: rgba(255, 255, 255, 0.1);
+  --glow-a: rgba(245, 158, 11, 0.13);
+  --glow-b: rgba(234, 88, 12, 0.1);
+
+  --brand: #f5a524;
+  --accent-ink: #fbbf24;
+  --good: #0ca30c;
+
+  --pk-long_neck: #3987e5;
+  --pk-lata: #d95926;
+  --pk-barril: #199e70;
+  --pk-outras: #c98500;
+  --series-1: #3987e5;
+  --series-focus: #e8703e;
+  --series-rest: #5a564c;
+  /* No escuro a intensidade sobe em direção à luz. */
+  --seq-0: #1d2633;
+  --seq-1: #173e6e;
+  --seq-2: #1c5cab;
+  --seq-3: #3987e5;
+  --seq-4: #86b6ef;
+  --seq-5: #cde2fb;
+  --seq-ink-0: #f1efe9;
+  --seq-ink-1: #ffffff;
+  --seq-ink-2: #ffffff;
+  --seq-ink-3: #ffffff;
+  --seq-ink-4: #0b0b0b;
+  --seq-ink-5: #0b0b0b;
+}
+
+@theme inline {
+  --color-page: var(--page);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-muted: var(--muted);
+  --color-grid: var(--grid);
+  --color-line: var(--ring);
+  --color-accent: var(--brand);
+  --color-brand-ink: var(--brand-ink);
+  --color-accent-ink: var(--accent-ink);
+  --color-good: var(--good);
+  --font-sans: var(--font-geist-sans), system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html {
+  background: var(--page);
+  overflow-x: clip;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--page);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--brand);
+  color: var(--brand-ink);
+}
+
+/* Lenis (smooth scroll) */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: clip;
+}
+
+/* Fundo do hero: grade sutil que some nas bordas. */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, var(--grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 30%, transparent 75%);
+}
+
+/* Animações de entrada do hero (CSS puro, rodam antes do JS). */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+    filter: blur(6px);
+  }
+}
+@keyframes word-rise {
+  from {
+    transform: translateY(105%);
+  }
+}
+@keyframes slide-up {
+  from {
+    transform: translateY(18px);
+  }
+}
+.rise {
+  animation: rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+/* Sem fade: o parágrafo fica visível na 1ª pintura e vira o LCP cedo. */
+.slide-up {
+  animation: slide-up 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.word-rise {
+  animation: word-rise 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--ring);
+  border-radius: 1.25rem;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Shiki com tema duplo: troca as cores pelo data-theme. */
+.shiki,
+.shiki span {
+  background-color: transparent !important;
+}
+:root[data-theme="dark"] .shiki,
+:root[data-theme="dark"] .shiki span {
+  color: var(--shiki-dark) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .card {
+    border: 1px solid CanvasText;
+  }
+}

@@ -1,0 +1,103 @@
+{
+ "caixas_mes": [
+  {
+   "etapa_id": "armazenagem",
+   "embalagem_id": "barril",
+   "caixas": 1.963
+  },
+  {
+   "etapa_id": "armazenagem",
+   "embalagem_id": "lata",
+   "caixas": 118.5556
+  },
+  {
+   "etapa_id": "armazenagem",
+   "embalagem_id": "long_neck",
+   "caixas": 333.2593
+  },
+  {
+   "etapa_id": "armazenagem",
+   "embalagem_id": "outras",
+   "caixas": 24.6667
+  },
+  {
+   "etapa_id": "carregamento",
+   "embalagem_id": "barril",
+   "caixas": 2.3333
+  },
+  {
+   "etapa_id": "carregamento",
+   "embalagem_id": "lata",
+   "caixas": 143.4444
+  },
+  {
+   "etapa_id": "carregamento",
+   "embalagem_id": "long_neck",
+   "caixas": 420.3704
+  },
+  {
+   "etapa_id": "carregamento",
+   "embalagem_id": "outras",
+   "caixas": 28.4444
+  },
+  {
+   "etapa_id": "doca",
+   "embalagem_id": "barril",
+   "caixas": 0.7778
+  },
+  {
+   "etapa_id": "doca",
+   "embalagem_id": "lata",
+   "caixas": 91.0
+  },
+  {
+   "etapa_id": "doca",
+   "embalagem_id": "long_neck",
+   "caixas": 248.4444
+  },
+  {
+   "etapa_id": "doca",
+   "embalagem_id": "outras",
+   "caixas": 19.1852
+  },
+  {
+   "etapa_id": "separacao",
+   "embalagem_id": "barril",
+   "caixas": 4.7778
+  },
+  {
+   "etapa_id": "separacao",
+   "embalagem_id": "lata",
+   "caixas": 261.3333
+  },
+  {
+   "etapa_id": "separacao",
+   "embalagem_id": "long_neck",
+   "caixas": 746.9259
+  },
+  {
+   "etapa_id": "separacao",
+   "embalagem_id": "outras",
+   "caixas": 51.7778
+  }
+ ],
+ "precos": {
+  "lata": 48.0,
+  "long_neck": 96.0,
+  "barril": 420.0,
+  "outras": 70.0
+ },
+ "reducao_padrao": 30,
+ "etapas": [
+  "doca",
+  "armazenagem",
+  "separacao",
+  "carregamento"
+ ],
+ "embalagens": [
+  "lata",
+  "long_neck",
+  "barril",
+  "outras"
+ ]
+}

@@ -1,0 +1,20 @@
+{
+ "gerado_em": "2026-11-02",
+ "periodo_inicio": "2017-06",
+ "periodo_fim": "2026-08",
+ "meses": 27,
+ "itens": 9708,
+ "fornecedores": 136,
+ "caixas_movimentadas": 8027028.0,
+ "caixas_avariadas": 67426,
+ "custo_total_brl": 5675804.0,
+ "custo_medio_mensal_brl": 210214.963,
+ "taxa_pct": 0.84,
+ "fao": {
+  "perda_pct": 13.2,
+  "ano": 2021,
+  "fonte": "https://www.fao.org/sustainable-development-goals-data-portal/data/indicators/1231-global-food-losses/en"
+ },
+ "taxa_base_pct": 0.6,
+ "seed": 42
+}

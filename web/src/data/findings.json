@@ -1,0 +1,36 @@
+{
+ "achados": {
+  "top3_pct": 45.86,
+  "top3": [
+   {
+    "motivo_id": "quebra_manuseio",
+    "etapa_id": "separacao",
+    "pct": 26.8
+   },
+   {
+    "motivo_id": "queda_palete",
+    "etapa_id": "carregamento",
+    "pct": 10.04
+   },
+   {
+    "motivo_id": "quebra_manuseio",
+    "etapa_id": "carregamento",
+    "pct": 9.02
+   }
+  ],
+  "combos_ate_80": 9,
+  "long_neck_pct_custo": 79.8725,
+  "long_neck_pct_volume": 50.6247,
+  "long_neck_taxa_pct": 1.1621,
+  "lata_taxa_pct": 0.4916,
+  "separacao_var_pct": 30.78,
+  "outras_var_media_pct": -11.15
+ },
+ "acoes": {
+  "reducao_pct": 30,
+  "economia_separacao_mes": 26964.0,
+  "economia_long_neck_mes": 50371.2,
+  "economia_top3_mes": 26874.4741
+ },
+ "custo_medio_mensal_brl": 210214.963
+}

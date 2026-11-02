@@ -1,0 +1,226 @@
+{
+ "combos": [
+  {
+   "motivo_id": "quebra_manuseio",
+   "etapa_id": "separacao",
+   "caixas": 16555,
+   "custo_brl": 1521106.0,
+   "pct": 26.8,
+   "pct_acum": 26.8,
+   "posicao": 1
+  },
+  {
+   "motivo_id": "queda_palete",
+   "etapa_id": "carregamento",
+   "caixas": 6556,
+   "custo_brl": 569934.0,
+   "pct": 10.04,
+   "pct_acum": 36.84,
+   "posicao": 2
+  },
+  {
+   "motivo_id": "quebra_manuseio",
+   "etapa_id": "carregamento",
+   "caixas": 5538,
+   "custo_brl": 511914.0,
+   "pct": 9.02,
+   "pct_acum": 45.86,
+   "posicao": 3
+  },
+  {
+   "motivo_id": "queda_palete",
+   "etapa_id": "separacao",
+   "caixas": 5306,
+   "custo_brl": 458572.0,
+   "pct": 8.08,
+   "pct_acum": 53.94,
+   "posicao": 4
+  },
+  {
+   "motivo_id": "empilhamento",
+   "etapa_id": "armazenagem",
+   "caixas": 5257,
+   "custo_brl": 442190.0,
+   "pct": 7.79,
+   "pct_acum": 61.73,
+   "posicao": 5
+  },
+  {
+   "motivo_id": "avaria_fornecedor",
+   "etapa_id": "doca",
+   "caixas": 4969,
+   "custo_brl": 428154.0,
+   "pct": 7.54,
+   "pct_acum": 69.27,
+   "posicao": 6
+  },
+  {
+   "motivo_id": "colisao_empilhadeira",
+   "etapa_id": "armazenagem",
+   "caixas": 3820,
+   "custo_brl": 319400.0,
+   "pct": 5.63,
+   "pct_acum": 74.9,
+   "posicao": 7
+  },
+  {
+   "motivo_id": "amassado",
+   "etapa_id": "separacao",
+   "caixas": 4796,
+   "custo_brl": 273020.0,
+   "pct": 4.81,
+   "pct_acum": 79.71,
+   "posicao": 8
+  },
+  {
+   "motivo_id": "vencimento",
+   "etapa_id": "armazenagem",
+   "caixas": 2558,
+   "custo_brl": 210546.0,
+   "pct": 3.71,
+   "pct_acum": 83.42,
+   "posicao": 9
+  },
+  {
+   "motivo_id": "queda_palete",
+   "etapa_id": "doca",
+   "caixas": 2335,
+   "custo_brl": 206470.0,
+   "pct": 3.64,
+   "pct_acum": 87.06,
+   "posicao": 10
+  },
+  {
+   "motivo_id": "colisao_empilhadeira",
+   "etapa_id": "separacao",
+   "caixas": 2093,
+   "custo_brl": 174062.0,
+   "pct": 3.07,
+   "pct_acum": 90.13,
+   "posicao": 11
+  },
+  {
+   "motivo_id": "amassado",
+   "etapa_id": "carregamento",
+   "caixas": 2609,
+   "custo_brl": 148980.0,
+   "pct": 2.62,
+   "pct_acum": 92.75,
+   "posicao": 12
+  },
+  {
+   "motivo_id": "vazamento",
+   "etapa_id": "carregamento",
+   "caixas": 1351,
+   "custo_brl": 124896.0,
+   "pct": 2.2,
+   "pct_acum": 94.95,
+   "posicao": 13
+  },
+  {
+   "motivo_id": "vazamento",
+   "etapa_id": "armazenagem",
+   "caixas": 1283,
+   "custo_brl": 114200.0,
+   "pct": 2.01,
+   "pct_acum": 96.96,
+   "posicao": 14
+  },
+  {
+   "motivo_id": "amassado",
+   "etapa_id": "doca",
+   "caixas": 1439,
+   "custo_brl": 87022.0,
+   "pct": 1.53,
+   "pct_acum": 98.5,
+   "posicao": 15
+  },
+  {
+   "motivo_id": "vazamento",
+   "etapa_id": "doca",
+   "caixas": 961,
+   "custo_brl": 85338.0,
+   "pct": 1.5,
+   "pct_acum": 100.0,
+   "posicao": 16
+  }
+ ],
+ "motivos": [
+  {
+   "motivo_id": "quebra_manuseio",
+   "custo_brl": 2033020.0,
+   "pct": 35.8191,
+   "pct_acum": 35.8191
+  },
+  {
+   "motivo_id": "queda_palete",
+   "custo_brl": 1234976.0,
+   "pct": 21.7586,
+   "pct_acum": 57.5777
+  },
+  {
+   "motivo_id": "amassado",
+   "custo_brl": 509022.0,
+   "pct": 8.9683,
+   "pct_acum": 66.546
+  },
+  {
+   "motivo_id": "colisao_empilhadeira",
+   "custo_brl": 493462.0,
+   "pct": 8.6941,
+   "pct_acum": 75.2401
+  },
+  {
+   "motivo_id": "empilhamento",
+   "custo_brl": 442190.0,
+   "pct": 7.7908,
+   "pct_acum": 83.0309
+  },
+  {
+   "motivo_id": "avaria_fornecedor",
+   "custo_brl": 428154.0,
+   "pct": 7.5435,
+   "pct_acum": 90.5744
+  },
+  {
+   "motivo_id": "vazamento",
+   "custo_brl": 324434.0,
+   "pct": 5.7161,
+   "pct_acum": 96.2905
+  },
+  {
+   "motivo_id": "vencimento",
+   "custo_brl": 210546.0,
+   "pct": 3.7095,
+   "pct_acum": 100.0
+  }
+ ],
+ "etapas": [
+  {
+   "etapa_id": "separacao",
+   "custo_brl": 2426760.0,
+   "pct": 42.7562,
+   "pct_acum": 42.7562
+  },
+  {
+   "etapa_id": "carregamento",
+   "custo_brl": 1355724.0,
+   "pct": 23.886,
+   "pct_acum": 66.6423
+  },
+  {
+   "etapa_id": "armazenagem",
+   "custo_brl": 1086336.0,
+   "pct": 19.1398,
+   "pct_acum": 85.782
+  },
+  {
+   "etapa_id": "doca",
+   "custo_brl": 806984.0,
+   "pct": 14.218,
+   "pct_acum": 100.0
+  }
+ ],
+ "combos_ate_80": 9,
+ "total_combos": 16
+}

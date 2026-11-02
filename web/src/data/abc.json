@@ -1,0 +1,136 @@
+{
+ "classes": [
+  {
+   "classe": "A",
+   "itens": 233,
+   "caixas_movimentadas": 6419000.0,
+   "pct_volume": 79.97,
+   "caixas_avariadas": 54138,
+   "custo_brl": 4519422.0,
+   "pct_custo": 79.63,
+   "taxa_pct": 0.843
+  },
+  {
+   "classe": "B",
+   "itens": 588,
+   "caixas_movimentadas": 1206626.0,
+   "pct_volume": 15.03,
+   "caixas_avariadas": 10367,
+   "custo_brl": 895290.0,
+   "pct_custo": 15.77,
+   "taxa_pct": 0.859
+  },
+  {
+   "classe": "C",
+   "itens": 8716,
+   "caixas_movimentadas": 401403.0,
+   "pct_volume": 5.0,
+   "caixas_avariadas": 2921,
+   "custo_brl": 261092.0,
+   "pct_custo": 4.6,
+   "taxa_pct": 0.728
+  }
+ ],
+ "top_itens": [
+  {
+   "item_code": "23445",
+   "descricao": "CORONA EXTRA LOOSE NR - 12OZ",
+   "embalagem_id": "long_neck",
+   "motivo_id": "quebra_manuseio",
+   "motivo_principal": "Quebra no manuseio",
+   "caixas_avariadas": 3372,
+   "custo_brl": 323712.0,
+   "taxa_pct": 0.929
+  },
+  {
+   "item_code": "96750",
+   "descricao": "CORONA EXTRA 2/12 NR - 12OZ",
+   "embalagem_id": "long_neck",
+   "motivo_id": "quebra_manuseio",
+   "motivo_principal": "Quebra no manuseio",
+   "caixas_avariadas": 3365,
+   "custo_brl": 323040.0,
+   "taxa_pct": 1.203
+  },
+  {
+   "item_code": "96970",
+   "descricao": "HEINEKEN 2/12 NR - 12OZ",
+   "embalagem_id": "long_neck",
+   "motivo_id": "quebra_manuseio",
+   "motivo_principal": "Quebra no manuseio",
+   "caixas_avariadas": 2844,
+   "custo_brl": 273024.0,
+   "taxa_pct": 1.629
+  },
+  {
+   "item_code": "25883",
+   "descricao": "MODELO ESPECIAL 24 LOOSE NR - 12OZ",
+   "embalagem_id": "long_neck",
+   "motivo_id": "quebra_manuseio",
+   "motivo_principal": "Quebra no manuseio",
+   "caixas_avariadas": 2077,
+   "custo_brl": 199392.0,
+   "taxa_pct": 1.439
+  },
+  {
+   "item_code": "23886",
+   "descricao": "HEINEKEN LOOSE NR - 12OZ",
+   "embalagem_id": "long_neck",
+   "motivo_id": "quebra_manuseio",
+   "motivo_principal": "Quebra no manuseio",
+   "caixas_avariadas": 1770,
+   "custo_brl": 169920.0,
+   "taxa_pct": 0.867
+  },
+  {
+   "item_code": "23314",
+   "descricao": "CORONA EXTRA 18PK NR - 12OZ",
+   "embalagem_id": "long_neck",
+   "motivo_id": "quebra_manuseio",
+   "motivo_principal": "Quebra no manuseio",
+   "caixas_avariadas": 1599,
+   "custo_brl": 153504.0,
+   "taxa_pct": 1.467
+  },
+  {
+   "item_code": "96083",
+   "descricao": "HEINEKEN 4/6 NR - 12OZ",
+   "embalagem_id": "long_neck",
+   "motivo_id": "quebra_manuseio",
+   "motivo_principal": "Quebra no manuseio",
+   "caixas_avariadas": 1592,
+   "custo_brl": 152832.0,
+   "taxa_pct": 1.407
+  },
+  {
+   "item_code": "97918",
+   "descricao": "STELLA ARTOIS 2/12 NR - 11.2OZ",
+   "embalagem_id": "long_neck",
+   "motivo_id": "quebra_manuseio",
+   "motivo_principal": "Quebra no manuseio",
+   "caixas_avariadas": 1130,
+   "custo_brl": 108480.0,
+   "taxa_pct": 1.39
+  },
+  {
+   "item_code": "25603",
+   "descricao": "FLYING DOG THE TRUTH 4/6NR - 12OZ",
+   "embalagem_id": "long_neck",
+   "motivo_id": "quebra_manuseio",
+   "motivo_principal": "Quebra no manuseio",
+   "caixas_avariadas": 901,
+   "custo_brl": 86496.0,
+   "taxa_pct": 2.84
+  },
+  {
+   "item_code": "96741",
+   "descricao": "CORONA EXTRA 4/6 NR - 12OZ",
+   "embalagem_id": "long_neck",
+   "motivo_id": "quebra_manuseio",
+   "motivo_principal": "Quebra no manuseio",
+   "caixas_avariadas": 894,
+   "custo_brl": 85824.0,
+   "taxa_pct": 0.619
+  }
+ ]
+}

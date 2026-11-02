@@ -1,0 +1,28 @@
+# Dados que nunca vão para o GitHub
+data/private/
+data/raw/*
+!data/raw/.gitkeep
+
+# Banco local
+*.db
+*.sqlite
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+
+# Next.js
+web/node_modules/
+web/.next/
+web/out/
+
+# SO / editor
+.DS_Store
+Thumbs.db
+.vscode/
+
+# TypeScript
+*.tsbuildinfo

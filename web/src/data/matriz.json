@@ -1,0 +1,170 @@
+{
+ "celulas": [
+  {
+   "embalagem_id": "barril",
+   "etapa_id": "doca",
+   "caixas_avariadas": 21,
+   "custo_brl": 8820.0,
+   "taxa_pct": 0.016,
+   "pct_custo": 0.16
+  },
+  {
+   "embalagem_id": "barril",
+   "etapa_id": "armazenagem",
+   "caixas_avariadas": 53,
+   "custo_brl": 22260.0,
+   "taxa_pct": 0.041,
+   "pct_custo": 0.39
+  },
+  {
+   "embalagem_id": "barril",
+   "etapa_id": "separacao",
+   "caixas_avariadas": 129,
+   "custo_brl": 54180.0,
+   "taxa_pct": 0.099,
+   "pct_custo": 0.95
+  },
+  {
+   "embalagem_id": "barril",
+   "etapa_id": "carregamento",
+   "caixas_avariadas": 63,
+   "custo_brl": 26460.0,
+   "taxa_pct": 0.048,
+   "pct_custo": 0.47
+  },
+  {
+   "embalagem_id": "lata",
+   "etapa_id": "doca",
+   "caixas_avariadas": 2457,
+   "custo_brl": 117936.0,
+   "taxa_pct": 0.073,
+   "pct_custo": 2.08
+  },
+  {
+   "embalagem_id": "lata",
+   "etapa_id": "armazenagem",
+   "caixas_avariadas": 3201,
+   "custo_brl": 153648.0,
+   "taxa_pct": 0.095,
+   "pct_custo": 2.71
+  },
+  {
+   "embalagem_id": "lata",
+   "etapa_id": "separacao",
+   "caixas_avariadas": 7056,
+   "custo_brl": 338688.0,
+   "taxa_pct": 0.209,
+   "pct_custo": 5.97
+  },
+  {
+   "embalagem_id": "lata",
+   "etapa_id": "carregamento",
+   "caixas_avariadas": 3873,
+   "custo_brl": 185904.0,
+   "taxa_pct": 0.115,
+   "pct_custo": 3.28
+  },
+  {
+   "embalagem_id": "long_neck",
+   "etapa_id": "doca",
+   "caixas_avariadas": 6708,
+   "custo_brl": 643968.0,
+   "taxa_pct": 0.165,
+   "pct_custo": 11.35
+  },
+  {
+   "embalagem_id": "long_neck",
+   "etapa_id": "armazenagem",
+   "caixas_avariadas": 8998,
+   "custo_brl": 863808.0,
+   "taxa_pct": 0.221,
+   "pct_custo": 15.22
+  },
+  {
+   "embalagem_id": "long_neck",
+   "etapa_id": "separacao",
+   "caixas_avariadas": 20167,
+   "custo_brl": 1936032.0,
+   "taxa_pct": 0.496,
+   "pct_custo": 34.11
+  },
+  {
+   "embalagem_id": "long_neck",
+   "etapa_id": "carregamento",
+   "caixas_avariadas": 11350,
+   "custo_brl": 1089600.0,
+   "taxa_pct": 0.279,
+   "pct_custo": 19.2
+  },
+  {
+   "embalagem_id": "outras",
+   "etapa_id": "doca",
+   "caixas_avariadas": 518,
+   "custo_brl": 36260.0,
+   "taxa_pct": 0.113,
+   "pct_custo": 0.64
+  },
+  {
+   "embalagem_id": "outras",
+   "etapa_id": "armazenagem",
+   "caixas_avariadas": 666,
+   "custo_brl": 46620.0,
+   "taxa_pct": 0.145,
+   "pct_custo": 0.82
+  },
+  {
+   "embalagem_id": "outras",
+   "etapa_id": "separacao",
+   "caixas_avariadas": 1398,
+   "custo_brl": 97860.0,
+   "taxa_pct": 0.305,
+   "pct_custo": 1.72
+  },
+  {
+   "embalagem_id": "outras",
+   "etapa_id": "carregamento",
+   "caixas_avariadas": 768,
+   "custo_brl": 53760.0,
+   "taxa_pct": 0.168,
+   "pct_custo": 0.95
+  }
+ ],
+ "embalagens": [
+  {
+   "embalagem_id": "barril",
+   "caixas_movimentadas": 130664.0,
+   "pct_volume": 1.6278,
+   "custo_brl": 111720.0,
+   "caixas_avariadas": 266,
+   "pct_custo": 1.9684,
+   "taxa_pct": 0.2036
+  },
+  {
+   "embalagem_id": "lata",
+   "caixas_movimentadas": 3374349.47,
+   "pct_volume": 42.0373,
+   "custo_brl": 796176.0,
+   "caixas_avariadas": 16587,
+   "pct_custo": 14.0275,
+   "taxa_pct": 0.4916
+  },
+  {
+   "embalagem_id": "long_neck",
+   "caixas_movimentadas": 4063658.83,
+   "pct_volume": 50.6247,
+   "custo_brl": 4533408.0,
+   "caixas_avariadas": 47223,
+   "pct_custo": 79.8725,
+   "taxa_pct": 1.1621
+  },
+  {
+   "embalagem_id": "outras",
+   "caixas_movimentadas": 458356.95,
+   "pct_volume": 5.7102,
+   "custo_brl": 234500.0,
+   "caixas_avariadas": 3350,
+   "pct_custo": 4.1316,
+   "taxa_pct": 0.7309
+  }
+ ]
+}

@@ -1,0 +1,172 @@
+{
+ "janelas": [
+  {
+   "id": "2017-06",
+   "rotulo": "J1 · jun/17–fev/18"
+  },
+  {
+   "id": "2019-01",
+   "rotulo": "J2 · jan–nov/19"
+  },
+  {
+   "id": "2020-01",
+   "rotulo": "J3 · 2020 (4 meses)"
+  },
+  {
+   "id": "2026-06",
+   "rotulo": "J4 · jun–ago/26"
+  }
+ ],
+ "series": [
+  {
+   "janela": "2017-06",
+   "etapa_id": "armazenagem",
+   "meses": 9,
+   "caixas_avariadas": 4348,
+   "taxa_pct": 0.1636,
+   "var_pp": null,
+   "var_vs_inicio_pct": 0.0
+  },
+  {
+   "janela": "2019-01",
+   "etapa_id": "armazenagem",
+   "meses": 11,
+   "caixas_avariadas": 5355,
+   "taxa_pct": 0.1633,
+   "var_pp": -0.0002,
+   "var_vs_inicio_pct": -0.14
+  },
+  {
+   "janela": "2020-01",
+   "etapa_id": "armazenagem",
+   "meses": 4,
+   "caixas_avariadas": 1988,
+   "taxa_pct": 0.1557,
+   "var_pp": -0.0076,
+   "var_vs_inicio_pct": -4.8
+  },
+  {
+   "janela": "2026-06",
+   "etapa_id": "armazenagem",
+   "meses": 3,
+   "caixas_avariadas": 1227,
+   "taxa_pct": 0.1508,
+   "var_pp": -0.0049,
+   "var_vs_inicio_pct": -7.8
+  },
+  {
+   "janela": "2017-06",
+   "etapa_id": "carregamento",
+   "meses": 9,
+   "caixas_avariadas": 5524,
+   "taxa_pct": 0.2078,
+   "var_pp": null,
+   "var_vs_inicio_pct": 0.0
+  },
+  {
+   "janela": "2019-01",
+   "etapa_id": "carregamento",
+   "meses": 11,
+   "caixas_avariadas": 6530,
+   "taxa_pct": 0.1992,
+   "var_pp": -0.0086,
+   "var_vs_inicio_pct": -4.16
+  },
+  {
+   "janela": "2020-01",
+   "etapa_id": "carregamento",
+   "meses": 4,
+   "caixas_avariadas": 2532,
+   "taxa_pct": 0.1983,
+   "var_pp": -0.0008,
+   "var_vs_inicio_pct": -4.56
+  },
+  {
+   "janela": "2026-06",
+   "etapa_id": "carregamento",
+   "meses": 3,
+   "caixas_avariadas": 1468,
+   "taxa_pct": 0.1804,
+   "var_pp": -0.0179,
+   "var_vs_inicio_pct": -13.17
+  },
+  {
+   "janela": "2017-06",
+   "etapa_id": "doca",
+   "meses": 9,
+   "caixas_avariadas": 3319,
+   "taxa_pct": 0.1249,
+   "var_pp": null,
+   "var_vs_inicio_pct": 0.0
+  },
+  {
+   "janela": "2019-01",
+   "etapa_id": "doca",
+   "meses": 11,
+   "caixas_avariadas": 3942,
+   "taxa_pct": 0.1202,
+   "var_pp": -0.0046,
+   "var_vs_inicio_pct": -3.7
+  },
+  {
+   "janela": "2020-01",
+   "etapa_id": "doca",
+   "meses": 4,
+   "caixas_avariadas": 1554,
+   "taxa_pct": 0.1217,
+   "var_pp": 0.0015,
+   "var_vs_inicio_pct": -2.51
+  },
+  {
+   "janela": "2026-06",
+   "etapa_id": "doca",
+   "meses": 3,
+   "caixas_avariadas": 889,
+   "taxa_pct": 0.1093,
+   "var_pp": -0.0125,
+   "var_vs_inicio_pct": -12.48
+  },
+  {
+   "janela": "2017-06",
+   "etapa_id": "separacao",
+   "meses": 9,
+   "caixas_avariadas": 8824,
+   "taxa_pct": 0.332,
+   "var_pp": null,
+   "var_vs_inicio_pct": 0.0
+  },
+  {
+   "janela": "2019-01",
+   "etapa_id": "separacao",
+   "meses": 11,
+   "caixas_avariadas": 11754,
+   "taxa_pct": 0.3585,
+   "var_pp": 0.0266,
+   "var_vs_inicio_pct": 8.0
+  },
+  {
+   "janela": "2020-01",
+   "etapa_id": "separacao",
+   "meses": 4,
+   "caixas_avariadas": 4640,
+   "taxa_pct": 0.3635,
+   "var_pp": 0.005,
+   "var_vs_inicio_pct": 9.49
+  },
+  {
+   "janela": "2026-06",
+   "etapa_id": "separacao",
+   "meses": 3,
+   "caixas_avariadas": 3532,
+   "taxa_pct": 0.4341,
+   "var_pp": 0.0707,
+   "var_vs_inicio_pct": 30.78
+  }
+ ],
+ "var_final_pct": {
+  "armazenagem": -7.8,
+  "carregamento": -13.17,
+  "doca": -12.48,
+  "separacao": 30.78
+ }
+}
