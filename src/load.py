@@ -1,7 +1,7 @@
 """Cria o banco (SQLite em data/armazem.db, ou PostgreSQL se DATABASE_URL estiver definida) a partir de
 sql/schema.sql e dos painéis versionados.
 
-Fontes: data/app/*.parquet (volumes reais) e data/sim/avarias.parquet (simulado).
+Fontes: data/app/*.parquet (volumes reais) e data/sim/*.parquet (avarias, inventário e vasilhame, simulados).
 O banco não é versionado: qualquer máquina o recria em segundos.
 
 Uso: python src/load.py
@@ -39,7 +39,31 @@ def dimensoes() -> dict[str, pd.DataFrame]:
     etapas = pd.DataFrame([{"etapa_id": k, "nome": v["nome"], "ordem": v["ordem"]} for k, v in ref.ETAPAS.items()])
     motivos = pd.DataFrame([{"motivo_id": k, "nome": v} for k, v in ref.MOTIVOS.items()])
     causas = pd.DataFrame([{"causa_id": k, "nome": v} for k, v in ref.CAUSAS.items()])
-    return {"embalagens": embalagens, "etapas": etapas, "motivos": motivos, "causas_divergencia": causas}
+    tipos_v = pd.DataFrame(
+        [
+            {
+                "tipo_id": k,
+                "nome": v["nome"],
+                "ordem": v["ordem"],
+                "preco_casco_brl": v["preco_casco_brl"],
+                "mult_refugo": v["mult_refugo"],
+            }
+            for k, v in ref.TIPOS_VASILHAME.items()
+        ]
+    )
+    etapas_v = pd.DataFrame(
+        [{"etapa_id": k, "nome": v["nome"], "ordem": v["ordem"]} for k, v in ref.ETAPAS_VASILHAME.items()]
+    )
+    motivos_v = pd.DataFrame([{"motivo_id": k, "nome": v} for k, v in ref.MOTIVOS_VASILHAME.items()])
+    return {
+        "embalagens": embalagens,
+        "etapas": etapas,
+        "motivos": motivos,
+        "causas_divergencia": causas,
+        "tipos_vasilhame": tipos_v,
+        "etapas_vasilhame": etapas_v,
+        "motivos_vasilhame": motivos_v,
+    }
 
 
 def tabelas() -> dict[str, pd.DataFrame]:
@@ -51,6 +75,8 @@ def tabelas() -> dict[str, pd.DataFrame]:
         "avarias": pd.read_parquet(SIM_DIR / "avarias.parquet"),
         "contagens": pd.read_parquet(SIM_DIR / "contagens.parquet"),
         "divergencias": pd.read_parquet(SIM_DIR / "divergencias.parquet"),
+        "vasilhame_retorno": pd.read_parquet(SIM_DIR / "vasilhame_retorno.parquet"),
+        "vasilhame_refugo": pd.read_parquet(SIM_DIR / "vasilhame_refugo.parquet"),
     }
 
 

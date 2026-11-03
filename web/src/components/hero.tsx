@@ -62,14 +62,14 @@ export function Hero() {
       <div aria-hidden className="bg-grid absolute inset-0 -z-10 opacity-70" />
       <motion.div
         aria-hidden
-        className="absolute -left-40 top-10 -z-10 size-[520px] rounded-full blur-3xl"
+        className="absolute -left-40 top-10 -z-10 size-[520px] rounded-full blur-3xl will-change-transform"
         style={{ background: "var(--glow-a)" }}
         animate={{ x: [0, 80, -20, 0], y: [0, 40, 90, 0], scale: [1, 1.1, 0.95, 1] }}
         transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
         aria-hidden
-        className="absolute -right-32 bottom-0 -z-10 size-[460px] rounded-full blur-3xl"
+        className="absolute -right-32 bottom-0 -z-10 size-[460px] rounded-full blur-3xl will-change-transform"
         style={{ background: "var(--glow-b)" }}
         animate={{ x: [0, -70, 10, 0], y: [0, -50, -10, 0], scale: [1, 0.92, 1.08, 1] }}
         transition={{ duration: 26, repeat: Infinity, ease: "easeInOut" }}

@@ -5,7 +5,7 @@ import { useState } from "react";
 import { PACKAGES, real } from "@/lib/data";
 import { fill } from "@/lib/format";
 import { packageColor, packageLabel } from "@/lib/labels";
-import { ChartFrame } from "../chart-frame";
+import { ChartFrame, Details } from "../chart-frame";
 import { CountUp, Reveal, useChartInView } from "../motion";
 import { useI18n } from "../providers";
 
@@ -94,10 +94,11 @@ export function RealCharts({ months }: { months: number }) {
   const keg = real.estornos.find((e) => e.embalagem_id === "barril")!;
 
   return (
-    <div className="space-y-4">
+    <div>
       <ChartFrame
         title={t.real.mixTitle}
         subtitle={t.real.mixSubtitle}
+        note={t.real.mixComment}
         sqlId="q7"
         legend={PACKAGES.map((p) => ({ label: packageLabel(p, lang), color: packageColor(p) }))}
         table={{
@@ -110,6 +111,7 @@ export function RealCharts({ months }: { months: number }) {
       >
         <MixBars />
       </ChartFrame>
+      <Details>
       <div className="grid gap-4 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
         <Reveal>
           <div className="card h-full p-5 sm:p-6">
@@ -130,6 +132,7 @@ export function RealCharts({ months }: { months: number }) {
             all: months,
           })}
           sqlId="q8"
+          note={t.real.estComment}
           table={{
             columns: ["", "%", t.real.months],
             rows: real.estornos.map((e) => [packageLabel(e.embalagem_id, lang), f.pp(e.taxa_pct, 4), e.meses_com_estorno]),
@@ -138,6 +141,7 @@ export function RealCharts({ months }: { months: number }) {
           <ReversalBars />
         </ChartFrame>
       </div>
+      </Details>
     </div>
   );
 }

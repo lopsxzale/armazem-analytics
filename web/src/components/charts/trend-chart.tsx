@@ -57,6 +57,7 @@ export function TrendChart() {
       title={t.trend.chartTitle}
       subtitle={t.trend.chartSubtitle}
       sqlId="q4"
+      note={t.trend.comment}
       controls={
         <Segmented
           label={t.trend.chartTitle}
@@ -122,14 +123,16 @@ export function TrendChart() {
                   <motion.circle key={p.janela} cx={x(p.janela)} animate={{ cy: y(val(p)) }} initial={false} r={4} fill={color(s)} stroke="var(--surface)" strokeWidth={2} />
                 ))}
                 {!narrow && (
-                  <text
+                  <motion.text
                     x={x(last.janela)! + 10}
-                    y={labelY[s]}
+                    initial={false}
+                    animate={{ y: labelY[s] }}
+                    transition={{ duration: 0.6 }}
                     dy="0.32em"
                     className={`text-[12px] tabular ${s === FOCUS ? "fill-ink font-semibold" : "fill-ink-2"}`}
                   >
                     {stageLabel(s, lang)} {f.spp(val(last), 0)}
-                  </text>
+                  </motion.text>
                 )}
               </g>
             );

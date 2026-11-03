@@ -28,8 +28,9 @@ export function IraChart() {
       title={t.inv.ira.chartTitle}
       subtitle={fill(t.inv.ira.chartSubtitle, { tol: inventory.premissas.tolerancia_pct })}
       sqlId="q9"
+      note={t.inv.ira.comment}
       table={{
-        columns: ["", "IRA", t.inv.ira.counts, t.inv.ira.events],
+        columns: ["", t.inv.ira.match, t.inv.ira.counts, t.inv.ira.events],
         rows: inventory.ira.map((r) => [r.classe, f.pp(r.ira_pct, 1), f.int(r.contagens), f.dec(r.eventos_por_contagem, 2)]),
       }}
     >
@@ -77,6 +78,7 @@ export function CausesChart() {
       title={t.inv.causes.chartTitle}
       subtitle={t.inv.causes.chartSubtitle}
       sqlId="q11"
+      note={fill(t.inv.causes.comment, { pct: f.pp(inventory.achados.avaria_nao_baixada_pct, 0) })}
       table={{
         columns: ["", "R$", "%", "%"],
         rows: inventory.causas.map((c) => [t.inv.causes.names[c.causa_id], f.brl0(c.valor_brl), f.pp(c.pct), f.pp(c.pct_acum)]),
@@ -206,6 +208,7 @@ export function FrequencyCharts() {
         title={t.inv.freq.chartTitle}
         subtitle={t.inv.freq.chartSubtitle}
         sqlId="q12"
+        note={fill(t.inv.freq.comment, { a: inventory.achados.intervalo_a, c: inventory.achados.intervalo_c })}
         legend={CLASSES.map((c) => ({ label: c, color: abcColor(c), shape: "line" as const }))}
         table={{
           columns: ["", ...inventory.premissas.intervalos_dias.map((d) => `${d} ${t.inv.freq.days}`)],
@@ -256,6 +259,7 @@ export function InventoryTopItems() {
       title={t.inv.items.chartTitle}
       subtitle={t.inv.items.chartSubtitle}
       sqlId="q10"
+      note={t.inv.items.comment}
       legend={[{ label: t.inv.causes.names.avaria_nao_baixada, color: "var(--series-focus)" }]}
       table={{
         columns: ["", "", t.inv.items.cause, t.inv.items.events, "R$"],

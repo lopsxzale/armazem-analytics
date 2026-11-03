@@ -3,7 +3,8 @@
 import { motion } from "motion/react";
 import { abc } from "@/lib/data";
 import { packageColor, packageLabel, reasonLabel } from "@/lib/labels";
-import { ChartFrame } from "../chart-frame";
+import { fill } from "@/lib/format";
+import { ChartFrame, Details } from "../chart-frame";
 import { useChartInView } from "../motion";
 import { useI18n } from "../providers";
 
@@ -12,7 +13,8 @@ function ClassBars() {
   const [ref, inView] = useChartInView<HTMLDivElement>();
 
   return (
-    <div ref={ref} className="space-y-6">
+    <div ref={ref}>
+      <div className="grid gap-x-10 gap-y-6 sm:grid-cols-3">
       {abc.classes.map((c, i) => (
         <div key={c.classe}>
           <p className="mb-1.5 flex items-baseline gap-2">
@@ -41,6 +43,7 @@ function ClassBars() {
           ))}
         </div>
       ))}
+      </div>
     </div>
   );
 }
@@ -89,12 +92,14 @@ function TopItems() {
 
 export function AbcCharts() {
   const { lang, t, f } = useI18n();
+  const a = abc.classes.find((c) => c.classe === "A")!;
 
   return (
-    <div className="grid gap-4 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
+    <div>
       <ChartFrame
         title={t.abc.classesTitle}
         subtitle={t.abc.classesSubtitle}
+        note={fill(t.abc.note, { n: f.int(a.itens), vol: f.pp(a.pct_volume, 0), cost: f.pp(a.pct_custo, 0) })}
         sqlId="q5"
         table={{
           columns: ["", t.abc.items, t.packaging.volume, t.packaging.cost, t.abc.rate],
@@ -103,9 +108,11 @@ export function AbcCharts() {
       >
         <ClassBars />
       </ChartFrame>
+      <Details label={t.abc.topTitle}>
       <ChartFrame
         title={t.abc.topTitle}
         subtitle={t.abc.topSubtitle}
+        note={t.abc.topComment}
         sqlId="q6"
         table={{
           columns: [t.abc.item, t.abc.package, t.abc.reason, t.abc.cost, t.abc.rate],
@@ -120,6 +127,7 @@ export function AbcCharts() {
       >
         <TopItems />
       </ChartFrame>
+      </Details>
     </div>
   );
 }

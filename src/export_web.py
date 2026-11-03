@@ -42,6 +42,8 @@ QUERIES = {
     "q10": "q10_divergencia_itens",
     "q11": "q11_causas",
     "q12": "q12_base_frequencia",
+    "q13": "q13_vasilhame_tipo_motivo",
+    "q14": "q14_vasilhame_etapa",
 }
 REDUCAO_PADRAO = 30  # % de redução usada nos achados e no valor inicial do simulador
 PRECOS = {k: v["preco_caixa_brl"] for k, v in ref.EMBALAGENS.items()}
@@ -232,6 +234,91 @@ def build_inventario(q: dict[str, pd.DataFrame]) -> dict:
     }
 
 
+ETAPAS_DE_FORA = ("retorno_rota", "triagem")  # refugo que já chega do cliente (o armazém só encontra)
+
+
+def build_vasilhame(q: dict[str, pd.DataFrame], con: sqlite3.Connection) -> dict:
+    """Refugo de vasilhame por tipo (1L, 600A, 600V, 300ml), motivo, etapa e mês. Camada 100% simulada."""
+    tm = q["q13"]
+    etapas = q["q14"]
+    tipos = (
+        tm.groupby(["tipo_id", "ordem"], as_index=False)
+        .agg(
+            cascos_refugados=("cascos_refugados", "sum"),
+            cascos_tipo=("cascos_tipo", "first"),
+            custo_brl=("custo_brl", "sum"),
+        )
+        .sort_values("ordem")
+    )
+    total_cascos = tipos["cascos_tipo"].sum()
+    tipos["taxa_pct"] = tipos["cascos_refugados"] / tipos["cascos_tipo"] * 100
+    tipos["pct_cascos"] = tipos["cascos_tipo"] / total_cascos * 100
+    tipos["pct_custo"] = tipos["custo_brl"] / tipos["custo_brl"].sum() * 100
+    tipos["preco_casco_brl"] = tipos["tipo_id"].map({k: v["preco_casco_brl"] for k, v in ref.TIPOS_VASILHAME.items()})
+
+    motivos = tm.groupby("motivo_id", as_index=False)["cascos_refugados"].sum()
+    motivos["pct"] = motivos["cascos_refugados"] / motivos["cascos_refugados"].sum() * 100
+    motivos = motivos.sort_values("cascos_refugados", ascending=False)
+
+    mensal = pd.read_sql(
+        """
+        SELECT r.periodo, r.cascos, COALESCE(f.refugados, 0) AS cascos_refugados, COALESCE(f.custo_brl, 0) AS custo_brl
+        FROM (SELECT periodo, SUM(cascos) AS cascos FROM vasilhame_retorno GROUP BY periodo) r
+        LEFT JOIN (
+            SELECT v.periodo, SUM(v.cascos) AS refugados, SUM(v.cascos * t.preco_casco_brl) AS custo_brl
+            FROM vasilhame_refugo v JOIN tipos_vasilhame t ON t.tipo_id = v.tipo_id
+            GROUP BY v.periodo
+        ) f ON f.periodo = r.periodo
+        ORDER BY r.periodo
+        """,
+        con,
+    )
+    mensal["taxa_pct"] = mensal["cascos_refugados"] / mensal["cascos"] * 100
+    meses = len(mensal)
+
+    pior = tipos.sort_values("taxa_pct", ascending=False).iloc[0]
+    melhor = tipos.sort_values("taxa_pct").iloc[0]
+    et = etapas.set_index("etapa_id")
+    de_fora = et.loc[list(ETAPAS_DE_FORA), "pct"].sum()
+    interno_custo_mes = et.drop(list(ETAPAS_DE_FORA))["custo_brl"].sum() / meses
+    return {
+        "tipos": records(tipos),
+        "celulas": records(tm[["tipo_id", "motivo_id", "cascos_refugados", "custo_brl", "taxa_pct", "pct_custo"]]),
+        "motivos": records(motivos),
+        "etapas": records(etapas[["etapa_id", "cascos_refugados", "custo_brl", "pct", "pct_acum"]]),
+        "mensal": records(mensal),
+        "premissas": {
+            "cascos_mes": ref.VASILHAME["cascos_mes"],
+            "taxa_base_refugo_pct": ref.VASILHAME["taxa_base_refugo"] * 100,
+            "meses": meses,
+            "periodo_inicio": mensal["periodo"].iloc[0],
+            "periodo_fim": mensal["periodo"].iloc[-1],
+            "seed": ref.SEED_VASILHAME,
+        },
+        "achados": {
+            "refugados_mes": tipos["cascos_refugados"].sum() / meses,
+            "custo_mes_brl": tipos["custo_brl"].sum() / meses,
+            "cascos_mes": total_cascos / meses,
+            "taxa_pct": tipos["cascos_refugados"].sum() / total_cascos * 100,
+            "pior_tipo": pior["tipo_id"],
+            "pior_taxa_pct": pior["taxa_pct"],
+            "pior_pct_cascos": pior["pct_cascos"],
+            "pior_pct_custo": pior["pct_custo"],
+            "melhor_tipo": melhor["tipo_id"],
+            "melhor_taxa_pct": melhor["taxa_pct"],
+            "pior_vs_melhor": pior["taxa_pct"] / melhor["taxa_pct"],
+            "top_motivo": motivos.iloc[0]["motivo_id"],
+            "top_motivo_pct": motivos.iloc[0]["pct"],
+            "de_fora_pct": de_fora,
+            "interno_pct": 100 - de_fora,
+            "economia_interno_mes": interno_custo_mes * REDUCAO_PADRAO / 100,
+            "reducao_pct": REDUCAO_PADRAO,
+            "pico_periodo": mensal.loc[mensal["cascos_refugados"].idxmax(), "periodo"],
+            "pico_refugados": mensal["cascos_refugados"].max(),
+        },
+    }
+
+
 def build_simulador(cm: pd.DataFrame) -> dict:
     return {
         "caixas_mes": records(cm),
@@ -418,6 +505,7 @@ def main() -> None:
     findings = build_findings(meta, pareto, matriz, tendencia, cm)
     real = build_real(q)
     inventario = build_inventario(q)
+    vasilhame = build_vasilhame(q, con)
     sens = json.loads(SENSIBILIDADE.read_text(encoding="utf-8"))
     payloads = {
         "meta": meta,
@@ -428,6 +516,7 @@ def main() -> None:
         "abc": build_abc(q),
         "real": real,
         "inventario": inventario,
+        "vasilhame": vasilhame,
         "simulador": build_simulador(cm),
         "findings": findings,
         "sql": build_sql(),

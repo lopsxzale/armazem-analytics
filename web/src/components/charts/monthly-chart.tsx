@@ -3,10 +3,11 @@
 import { scaleBand, scaleLinear } from "d3-scale";
 import { motion } from "motion/react";
 import { useState } from "react";
-import { monthly } from "@/lib/data";
+import { meta, monthly } from "@/lib/data";
 import { useWidth } from "@/lib/use-size";
 import { ChartFrame, ChartTooltip, TooltipRow } from "../chart-frame";
 import { useChartInView } from "../motion";
+import { fill } from "@/lib/format";
 import { useI18n } from "../providers";
 
 type Slot = { kind: "month"; key: string; i: number } | { kind: "gap"; key: string; months: number };
@@ -41,6 +42,7 @@ export function MonthlyChart() {
     .nice()
     .range([height - M.bottom, M.top]);
   const ticks = y.ticks(4);
+  const avg = data.reduce((s, d) => s + d.custo_brl, 0) / data.length;
   const hovered = hover !== null ? data[hover] : null;
   // Rótulo no eixo x: primeiro mês de cada bloco contínuo.
   const blockStarts = new Set(data.filter((d, i) => i === 0 || (d.meses_desde_anterior ?? 1) > 1).map((d) => d.periodo));
@@ -50,6 +52,7 @@ export function MonthlyChart() {
       title={t.monthly.chartTitle}
       subtitle={t.monthly.chartSubtitle}
       sqlId="q2"
+      note={fill(t.monthly.comment, { rate: f.pp(meta.taxa_pct, 2) })}
       table={{
         columns: ["", "R$", t.monthly.rate, t.monthly.moved],
         rows: data.map((d) => [f.month(d.periodo), f.brl0(d.custo_brl), f.pp(d.taxa_pct, 2), f.int(d.caixas_movimentadas)]),
@@ -117,6 +120,19 @@ export function MonthlyChart() {
               </g>
             );
           })}
+          {/* Média do período: referência para ler cada barra contra o "normal". */}
+          <g aria-hidden pointerEvents="none">
+            <line x1={M.left} x2={width - M.right} y1={y(avg)} y2={y(avg)} stroke="var(--ink)" strokeDasharray="5 4" strokeWidth={1.25} />
+            <text
+              x={width - M.right}
+              y={y(avg) - 7}
+              textAnchor="end"
+              className="fill-ink text-[11.5px] font-semibold"
+              style={{ paintOrder: "stroke", stroke: "var(--surface)", strokeWidth: 4, strokeLinejoin: "round" }}
+            >
+              {fill(t.monthly.avgNote, { v: f.brlCompact(avg) })}
+            </text>
+          </g>
         </svg>
         {hovered && hover !== null && (
           <ChartTooltip x={x(hovered.periodo)! + x.bandwidth() / 2} y={y(hovered.custo_brl)} width={width}>

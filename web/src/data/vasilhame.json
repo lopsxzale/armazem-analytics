@@ -1,0 +1,382 @@
+{
+ "tipos": [
+  {
+   "tipo_id": "1L",
+   "ordem": 1,
+   "cascos_refugados": 11028,
+   "cascos_tipo": 592576,
+   "custo_brl": 25364.4,
+   "taxa_pct": 1.861,
+   "pct_cascos": 27.555,
+   "pct_custo": 35.9791,
+   "preco_casco_brl": 2.3
+  },
+  {
+   "tipo_id": "600A",
+   "ordem": 2,
+   "cascos_refugados": 23733,
+   "cascos_tipo": 1041223,
+   "custo_brl": 34412.85,
+   "taxa_pct": 2.2793,
+   "pct_cascos": 48.4173,
+   "pct_custo": 48.8142,
+   "preco_casco_brl": 1.45
+  },
+  {
+   "tipo_id": "600V",
+   "ordem": 3,
+   "cascos_refugados": 4322,
+   "cascos_tipo": 215422,
+   "custo_brl": 7131.3,
+   "taxa_pct": 2.0063,
+   "pct_cascos": 10.0172,
+   "pct_custo": 10.1157,
+   "preco_casco_brl": 1.65
+  },
+  {
+   "tipo_id": "300ml",
+   "ordem": 4,
+   "cascos_refugados": 3778,
+   "cascos_tipo": 301298,
+   "custo_brl": 3589.1,
+   "taxa_pct": 1.2539,
+   "pct_cascos": 14.0105,
+   "pct_custo": 5.0911,
+   "preco_casco_brl": 0.95
+  }
+ ],
+ "celulas": [
+  {
+   "tipo_id": "1L",
+   "motivo_id": "quebrada",
+   "cascos_refugados": 4094,
+   "custo_brl": 9416.2,
+   "taxa_pct": 0.6909,
+   "pct_custo": 13.36
+  },
+  {
+   "tipo_id": "1L",
+   "motivo_id": "bicada_externa",
+   "cascos_refugados": 2091,
+   "custo_brl": 4809.3,
+   "taxa_pct": 0.3529,
+   "pct_custo": 6.82
+  },
+  {
+   "tipo_id": "1L",
+   "motivo_id": "trincada",
+   "cascos_refugados": 2036,
+   "custo_brl": 4682.8,
+   "taxa_pct": 0.3436,
+   "pct_custo": 6.64
+  },
+  {
+   "tipo_id": "1L",
+   "motivo_id": "sujidade_interna",
+   "cascos_refugados": 1673,
+   "custo_brl": 3847.9,
+   "taxa_pct": 0.2823,
+   "pct_custo": 5.46
+  },
+  {
+   "tipo_id": "1L",
+   "motivo_id": "bicada_interna",
+   "cascos_refugados": 1134,
+   "custo_brl": 2608.2,
+   "taxa_pct": 0.1914,
+   "pct_custo": 3.7
+  },
+  {
+   "tipo_id": "600A",
+   "motivo_id": "quebrada",
+   "cascos_refugados": 7335,
+   "custo_brl": 10635.75,
+   "taxa_pct": 0.7045,
+   "pct_custo": 15.09
+  },
+  {
+   "tipo_id": "600A",
+   "motivo_id": "bicada_externa",
+   "cascos_refugados": 6187,
+   "custo_brl": 8971.15,
+   "taxa_pct": 0.5942,
+   "pct_custo": 12.73
+  },
+  {
+   "tipo_id": "600A",
+   "motivo_id": "trincada",
+   "cascos_refugados": 4055,
+   "custo_brl": 5879.75,
+   "taxa_pct": 0.3894,
+   "pct_custo": 8.34
+  },
+  {
+   "tipo_id": "600A",
+   "motivo_id": "sujidade_interna",
+   "cascos_refugados": 3393,
+   "custo_brl": 4919.85,
+   "taxa_pct": 0.3259,
+   "pct_custo": 6.98
+  },
+  {
+   "tipo_id": "600A",
+   "motivo_id": "bicada_interna",
+   "cascos_refugados": 2763,
+   "custo_brl": 4006.35,
+   "taxa_pct": 0.2654,
+   "pct_custo": 5.68
+  },
+  {
+   "tipo_id": "600V",
+   "motivo_id": "quebrada",
+   "cascos_refugados": 1378,
+   "custo_brl": 2273.7,
+   "taxa_pct": 0.6397,
+   "pct_custo": 3.23
+  },
+  {
+   "tipo_id": "600V",
+   "motivo_id": "bicada_externa",
+   "cascos_refugados": 1142,
+   "custo_brl": 1884.3,
+   "taxa_pct": 0.5301,
+   "pct_custo": 2.67
+  },
+  {
+   "tipo_id": "600V",
+   "motivo_id": "trincada",
+   "cascos_refugados": 706,
+   "custo_brl": 1164.9,
+   "taxa_pct": 0.3277,
+   "pct_custo": 1.65
+  },
+  {
+   "tipo_id": "600V",
+   "motivo_id": "sujidade_interna",
+   "cascos_refugados": 642,
+   "custo_brl": 1059.3,
+   "taxa_pct": 0.298,
+   "pct_custo": 1.5
+  },
+  {
+   "tipo_id": "600V",
+   "motivo_id": "bicada_interna",
+   "cascos_refugados": 454,
+   "custo_brl": 749.1,
+   "taxa_pct": 0.2107,
+   "pct_custo": 1.06
+  },
+  {
+   "tipo_id": "300ml",
+   "motivo_id": "quebrada",
+   "cascos_refugados": 967,
+   "custo_brl": 918.65,
+   "taxa_pct": 0.3209,
+   "pct_custo": 1.3
+  },
+  {
+   "tipo_id": "300ml",
+   "motivo_id": "bicada_externa",
+   "cascos_refugados": 883,
+   "custo_brl": 838.85,
+   "taxa_pct": 0.2931,
+   "pct_custo": 1.19
+  },
+  {
+   "tipo_id": "300ml",
+   "motivo_id": "sujidade_interna",
+   "cascos_refugados": 832,
+   "custo_brl": 790.4,
+   "taxa_pct": 0.2761,
+   "pct_custo": 1.12
+  },
+  {
+   "tipo_id": "300ml",
+   "motivo_id": "trincada",
+   "cascos_refugados": 730,
+   "custo_brl": 693.5,
+   "taxa_pct": 0.2423,
+   "pct_custo": 0.98
+  },
+  {
+   "tipo_id": "300ml",
+   "motivo_id": "bicada_interna",
+   "cascos_refugados": 366,
+   "custo_brl": 347.7,
+   "taxa_pct": 0.1215,
+   "pct_custo": 0.49
+  }
+ ],
+ "motivos": [
+  {
+   "motivo_id": "quebrada",
+   "cascos_refugados": 13774,
+   "pct": 32.1364
+  },
+  {
+   "motivo_id": "bicada_externa",
+   "cascos_refugados": 10303,
+   "pct": 24.0382
+  },
+  {
+   "motivo_id": "trincada",
+   "cascos_refugados": 7527,
+   "pct": 17.5614
+  },
+  {
+   "motivo_id": "sujidade_interna",
+   "cascos_refugados": 6540,
+   "pct": 15.2586
+  },
+  {
+   "motivo_id": "bicada_interna",
+   "cascos_refugados": 4717,
+   "pct": 11.0053
+  }
+ ],
+ "etapas": [
+  {
+   "etapa_id": "retorno_rota",
+   "cascos_refugados": 14587,
+   "custo_brl": 23954.6,
+   "pct": 34.03,
+   "pct_acum": 34.03
+  },
+  {
+   "etapa_id": "triagem",
+   "cascos_refugados": 12818,
+   "custo_brl": 21116.9,
+   "pct": 29.91,
+   "pct_acum": 63.94
+  },
+  {
+   "etapa_id": "armazenagem_vasilhame",
+   "cascos_refugados": 6046,
+   "custo_brl": 9969.1,
+   "pct": 14.11,
+   "pct_acum": 78.05
+  },
+  {
+   "etapa_id": "separacao_carregamento",
+   "cascos_refugados": 9410,
+   "custo_brl": 15457.05,
+   "pct": 21.95,
+   "pct_acum": 100.0
+  }
+ ],
+ "mensal": [
+  {
+   "periodo": "2025-09",
+   "cascos": 169528,
+   "cascos_refugados": 3410,
+   "custo_brl": 5549.5,
+   "taxa_pct": 2.0115
+  },
+  {
+   "periodo": "2025-10",
+   "cascos": 180444,
+   "cascos_refugados": 3707,
+   "custo_brl": 6159.85,
+   "taxa_pct": 2.0544
+  },
+  {
+   "periodo": "2025-11",
+   "cascos": 193209,
+   "cascos_refugados": 3846,
+   "custo_brl": 6347.85,
+   "taxa_pct": 1.9906
+  },
+  {
+   "periodo": "2025-12",
+   "cascos": 230569,
+   "cascos_refugados": 4584,
+   "custo_brl": 7442.4,
+   "taxa_pct": 1.9881
+  },
+  {
+   "periodo": "2026-01",
+   "cascos": 215478,
+   "cascos_refugados": 4314,
+   "custo_brl": 7006.75,
+   "taxa_pct": 2.0021
+  },
+  {
+   "periodo": "2026-02",
+   "cascos": 199851,
+   "cascos_refugados": 3939,
+   "custo_brl": 6474.1,
+   "taxa_pct": 1.971
+  },
+  {
+   "periodo": "2026-03",
+   "cascos": 177201,
+   "cascos_refugados": 3604,
+   "custo_brl": 5949.35,
+   "taxa_pct": 2.0338
+  },
+  {
+   "periodo": "2026-04",
+   "cascos": 165513,
+   "cascos_refugados": 3222,
+   "custo_brl": 5385.55,
+   "taxa_pct": 1.9467
+  },
+  {
+   "periodo": "2026-05",
+   "cascos": 150056,
+   "cascos_refugados": 3030,
+   "custo_brl": 5031.95,
+   "taxa_pct": 2.0192
+  },
+  {
+   "periodo": "2026-06",
+   "cascos": 155672,
+   "cascos_refugados": 3091,
+   "custo_brl": 5084.55,
+   "taxa_pct": 1.9856
+  },
+  {
+   "periodo": "2026-07",
+   "cascos": 155244,
+   "cascos_refugados": 3030,
+   "custo_brl": 4971.0,
+   "taxa_pct": 1.9518
+  },
+  {
+   "periodo": "2026-08",
+   "cascos": 157754,
+   "cascos_refugados": 3084,
+   "custo_brl": 5094.8,
+   "taxa_pct": 1.9549
+  }
+ ],
+ "premissas": {
+  "cascos_mes": 180000,
+  "taxa_base_refugo_pct": 1.8,
+  "meses": 12,
+  "periodo_inicio": "2025-09",
+  "periodo_fim": "2026-08",
+  "seed": 242
+ },
+ "achados": {
+  "refugados_mes": 3571.75,
+  "custo_mes_brl": 5874.8042,
+  "cascos_mes": 179209.9167,
+  "taxa_pct": 1.9931,
+  "pior_tipo": "600A",
+  "pior_taxa_pct": 2.2793,
+  "pior_pct_cascos": 48.4173,
+  "pior_pct_custo": 48.8142,
+  "melhor_tipo": "300ml",
+  "melhor_taxa_pct": 1.2539,
+  "pior_vs_melhor": 1.8178,
+  "top_motivo": "quebrada",
+  "top_motivo_pct": 32.1364,
+  "de_fora_pct": 63.94,
+  "interno_pct": 36.06,
+  "economia_interno_mes": 635.6537,
+  "reducao_pct": 30,
+  "pico_periodo": "2025-12",
+  "pico_refugados": 4584
+ }
+}

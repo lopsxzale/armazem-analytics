@@ -19,6 +19,14 @@
 - **A taxa bruta engana:** na separação ela sobe 31% e nas outras etapas cai 11%. **Ajustada por mix**, a separação sobe 46% e as outras ficam estáveis. A alta foi plantada (+45%) para testar o método, que a recupera com erro mediano de −1,3 p.p.; sem alta plantada, a taxa ajustada fica entre −5% e +5%.
 - Perda estimada de **R$ 210 mil por mês** (0,84% das caixas); reduzir 30% da avaria na separação economiza cerca de **R$ 27 mil por mês**.
 
+## Vasilhame retornável (refugo de casco)
+
+Os 4 tipos de casco da operação: **1L** (litrão), **600A** (600 ml âmbar), **600V** (600 ml verde) e **300 ml** (litrinho). Camada **100% simulada** (premissas em `src/referencias.py`, `VASILHAME` e `TIPOS_VASILHAME`; simulação em `src/simulate_vasilhame.py`; SQL em `q13` e `q14`), com os motivos da operação (quebrada, trincada, sujidade interna, bicada externa e interna) e as etapas do caminho do casco (retorno de rota, triagem, armazenagem, separação/carregamento).
+
+- **Cerca de 3.570 cascos refugados por mês** (2,0% dos cascos), uns R$ 5,9 mil só em casco.
+- **O 600A sozinho é 49% do custo do refugo:** é o casco que mais gira e o que mais refuga (2,3%), 1,8× mais que o litrinho. Premissa informada pela operação: na revenda, o 600A é a garrafa que mais dá prejuízo.
+- **64% do refugo já chega ruim do cliente** (retorno de rota e triagem); os **36%** que acontecem dentro do armazém são o pedaço que o manuseio controla.
+
 ## Resultados da v2 (acuracidade de inventário)
 
 Giro e curva ABC reais; estoque, posições e divergências simulados (premissas em `src/referencias.py`, `INVENTARIO`). Resumo: [`docs/resumo-v2.md`](docs/resumo-v2.md).
@@ -36,6 +44,7 @@ python src/extract.py      # baixa o Montgomery para data/raw/ (30 MB, fora do g
 python src/transform.py    # cerveja e barris, embalagem pela descrição -> data/app/*.parquet
 python src/simulate.py     # avarias simuladas, seed fixo -> data/sim/avarias.parquet
 python src/simulate_inventario.py  # v2: contagens e divergências -> data/sim/
+python src/simulate_vasilhame.py   # refugo de vasilhame (1L, 600A, 600V, 300ml) -> data/sim/
 python src/sensitivity.py  # ~2 min: achados com premissas variando -> web/src/data/sensibilidade.json
 python src/load.py         # (opcional) banco SQLite em data/armazem.db para explorar as queries
 python src/export_web.py   # roda sql/analysis/ e gera web/src/data/*.json + docs/resumo-executivo.md
@@ -62,7 +71,7 @@ O código é **público e genérico**. Os dados mudam conforme o uso:
 
 - **Montgomery County (EUA): Warehouse and Retail Sales.** Dados reais e mensais de um armazém público de bebidas (cerveja, vinho, destilados), por item e fornecedor: vendas do armazém, transferências e vendas no varejo. É a base de volume, giro e curva ABC.
 - **FAO: indicador 12.3.1a.** 13,2% dos alimentos se perdem entre a colheita e o varejo (2021). A base FLW da FAO só exporta por sessão interativa, então o número entra como constante citada em `src/referencias.py` e serve de **teto**: bebida embalada perde muito menos, e a taxa base simulada é 0,6% das caixas.
-- **Camada simulada** (seed fixo, reproduzível): ocorrências de avaria por SKU, embalagem (lata, long neck, barril; derivada da descrição do item), etapa (doca, armazenagem, separação, carregamento) e motivo, presas aos volumes reais de Montgomery. Todas as premissas (taxas, multiplicadores, preços em R$) ficam em `src/referencias.py`.
+- **Camada simulada** (seed fixo, reproduzível; inclui o refugo de vasilhame, todo simulado): ocorrências de avaria por SKU, embalagem (lata, long neck, barril; derivada da descrição do item), etapa (descarga, armazenagem, separação, carregamento) e motivo, presas aos volumes reais de Montgomery. Todas as premissas (taxas, multiplicadores, preços em R$) ficam em `src/referencias.py`.
 - **Nenhum dado de empresa** entra no repositório, no site ou em prints. `data/private/` existe só para testes locais e é ignorado pelo git.
 
 ## Fases e perguntas de negócio

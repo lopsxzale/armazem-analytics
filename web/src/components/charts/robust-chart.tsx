@@ -4,7 +4,7 @@ import { scaleLinear } from "d3-scale";
 import { motion } from "motion/react";
 import { findings, sensitivity as sens, type PremiseKey, type SensKey } from "@/lib/data";
 import { useWidth } from "@/lib/use-size";
-import { ChartFrame, Legend } from "../chart-frame";
+import { ChartFrame, Details, Legend } from "../chart-frame";
 import { useChartInView } from "../motion";
 import { useI18n } from "../providers";
 
@@ -150,12 +150,13 @@ export function RobustCharts() {
   const changeVals = all(changes);
 
   return (
-    <div className="grid gap-4">
+    <div>
       <ChartFrame
         title={t.robust.chartTitle}
         subtitle={t.robust.chartSubtitle}
+        note={t.robust.comment}
         table={{
-          columns: ["", `${t.robust.ranges} (p5–p95)`, `${t.robust.nullScenario} (p5–p95)`, t.robust.v1],
+          columns: ["", t.robust.ranges, t.robust.nullScenario, t.robust.v1],
           rows: KEYS.map((k) => [
             t.robust.keys[k],
             `${f.dec(sens.faixas[k].p5, 1)} a ${f.dec(sens.faixas[k].p95, 1)}`,
@@ -177,9 +178,11 @@ export function RobustCharts() {
         <div className="h-6" />
         <RangeRows keys={changes} domain={[Math.min(...changeVals) - 5, Math.max(...changeVals) + 5]} />
       </ChartFrame>
-      <ChartFrame title={t.robust.dependsTitle} subtitle={t.robust.dependsSubtitle}>
-        <Dependence />
-      </ChartFrame>
+      <Details label={t.robust.dependsTitle}>
+        <ChartFrame title={t.robust.dependsTitle} subtitle={t.robust.dependsSubtitle} note={t.robust.dependsComment}>
+          <Dependence />
+        </ChartFrame>
+      </Details>
     </div>
   );
 }

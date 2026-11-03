@@ -1,5 +1,5 @@
 import type { Locale } from "@/i18n/config";
-import type { Package, Reason, Stage } from "./data";
+import type { Bottle, BottleReason, BottleStage, Package, Reason, Stage } from "./data";
 
 const PACKAGE_LABELS: Record<Package, Record<Locale, string>> = {
   long_neck: { pt: "Long neck (vidro)", en: "Long neck (glass)" },
@@ -9,7 +9,7 @@ const PACKAGE_LABELS: Record<Package, Record<Locale, string>> = {
 };
 
 const STAGE_LABELS: Record<Stage, Record<Locale, string>> = {
-  doca: { pt: "Doca", en: "Dock" },
+  doca: { pt: "Descarga", en: "Unloading" },
   armazenagem: { pt: "Armazenagem", en: "Storage" },
   separacao: { pt: "Separação", en: "Picking" },
   carregamento: { pt: "Carregamento", en: "Loading" },
@@ -17,7 +17,7 @@ const STAGE_LABELS: Record<Stage, Record<Locale, string>> = {
 
 // Frases do tipo "quebra no manuseio na separação" / "handling breakage at picking".
 const STAGE_IN: Record<Stage, Record<Locale, string>> = {
-  doca: { pt: "na doca", en: "at the dock" },
+  doca: { pt: "na descarga", en: "at unloading" },
   armazenagem: { pt: "na armazenagem", en: "in storage" },
   separacao: { pt: "na separação", en: "at picking" },
   carregamento: { pt: "no carregamento", en: "at loading" },
@@ -50,3 +50,36 @@ export const seqColor = (value: number, max: number) => {
   const step = Math.min(5, Math.max(0, Math.round((value / max) * 5)));
   return { fill: `var(--seq-${step})`, ink: `var(--seq-ink-${step})` };
 };
+
+// ---------------------------------------------------------------- vasilhame retornável
+
+const BOTTLE_LABELS: Record<Bottle, Record<Locale, string>> = {
+  "1L": { pt: "1L · litrão", en: "1L · quart bottle" },
+  "600A": { pt: "600A · 600 ml âmbar", en: "600A · 600 ml amber" },
+  "600V": { pt: "600V · 600 ml verde", en: "600V · 600 ml green" },
+  "300ml": { pt: "300 ml · litrinho", en: "300 ml · small bottle" },
+};
+
+const BOTTLE_SHORT: Record<Bottle, string> = { "1L": "1L", "600A": "600A", "600V": "600V", "300ml": "300 ml" };
+
+const BOTTLE_REASON_LABELS: Record<BottleReason, Record<Locale, string>> = {
+  quebrada: { pt: "Quebrada", en: "Broken" },
+  trincada: { pt: "Trincada", en: "Cracked" },
+  sujidade_interna: { pt: "Sujidade interna", en: "Dirty inside" },
+  bicada_externa: { pt: "Bicada externa", en: "Chipped outside" },
+  bicada_interna: { pt: "Bicada interna", en: "Chipped inside" },
+};
+
+const BOTTLE_STAGE_LABELS: Record<BottleStage, Record<Locale, string>> = {
+  retorno_rota: { pt: "Retorno de rota", en: "Route return" },
+  triagem: { pt: "Triagem", en: "Sorting" },
+  armazenagem_vasilhame: { pt: "Armazenagem", en: "Empties storage" },
+  separacao_carregamento: { pt: "Separação e carga", en: "Picking & loading" },
+};
+
+export const bottleLabel = (b: Bottle, lang: Locale) => BOTTLE_LABELS[b][lang];
+export const bottleShort = (b: Bottle) => BOTTLE_SHORT[b];
+export const bottleReasonLabel = (r: BottleReason, lang: Locale) => BOTTLE_REASON_LABELS[r][lang];
+export const bottleStageLabel = (s: BottleStage, lang: Locale) => BOTTLE_STAGE_LABELS[s][lang];
+/** Ordem fixa 1L, 600A, 600V, 300ml (validada nos pares vizinhos, claro e escuro). */
+export const bottleColor = (b: Bottle) => `var(--bt-${b})`;

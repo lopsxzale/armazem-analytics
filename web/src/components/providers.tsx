@@ -1,12 +1,10 @@
 "use client";
 
-import Lenis from "lenis";
 import { MotionConfig } from "motion/react";
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { createContext, useContext, useMemo, useState, type ReactNode } from "react";
 import type { Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n";
 import { formatters } from "@/lib/format";
-import { setLenis } from "@/lib/lenis";
 import type { SqlId } from "@/lib/data";
 import { SqlModal } from "./sql-modal";
 
@@ -23,18 +21,6 @@ export const useSql = () => useContext(SqlContext);
 
 export type HighlightedSql = Record<string, { html: string; raw: string }>;
 
-function useSmoothScroll() {
-  useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const lenis = new Lenis({ lerp: 0.09, anchors: { offset: -72 }, autoRaf: true });
-    setLenis(lenis);
-    return () => {
-      setLenis(null);
-      lenis.destroy();
-    };
-  }, []);
-}
-
 export function Providers({
   lang,
   sql,
@@ -46,7 +32,6 @@ export function Providers({
 }) {
   const [openSql, setOpenSql] = useState<SqlId | null>(null);
   const sqlValue = useMemo(() => ({ open: setOpenSql }), []);
-  useSmoothScroll();
 
   return (
     <I18nContext.Provider value={lang}>

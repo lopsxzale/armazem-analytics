@@ -2,6 +2,11 @@
 -- Volumes (itens, movimentos_mensais) são reais (Montgomery County).
 -- Avarias e preços são simulados (ver src/referencias.py).
 
+DROP TABLE IF EXISTS vasilhame_refugo;
+DROP TABLE IF EXISTS vasilhame_retorno;
+DROP TABLE IF EXISTS motivos_vasilhame;
+DROP TABLE IF EXISTS etapas_vasilhame;
+DROP TABLE IF EXISTS tipos_vasilhame;
 DROP TABLE IF EXISTS divergencias;
 DROP TABLE IF EXISTS contagens;
 DROP TABLE IF EXISTS causas_divergencia;
@@ -85,6 +90,47 @@ CREATE TABLE divergencias (
     eventos   INTEGER NOT NULL CHECK (eventos > 0),
     caixas    INTEGER NOT NULL,  -- físico - sistema (negativo = falta)
     PRIMARY KEY (periodo, item_code, causa_id)
+);
+
+-- Vasilhame retornável (1L, 600A, 600V, 300ml): camada 100% simulada (ver src/referencias.py)
+
+CREATE TABLE tipos_vasilhame (
+    tipo_id         TEXT PRIMARY KEY,
+    nome            TEXT NOT NULL,
+    ordem           INTEGER NOT NULL,
+    preco_casco_brl NUMERIC(10, 2) NOT NULL,  -- premissa
+    mult_refugo     NUMERIC(6, 3) NOT NULL    -- premissa
+);
+
+CREATE TABLE etapas_vasilhame (
+    etapa_id TEXT PRIMARY KEY,
+    nome     TEXT NOT NULL,
+    ordem    INTEGER NOT NULL
+);
+
+CREATE TABLE motivos_vasilhame (
+    motivo_id TEXT PRIMARY KEY,
+    nome      TEXT NOT NULL
+);
+
+CREATE TABLE vasilhame_retorno (
+    periodo TEXT NOT NULL,
+    ano     INTEGER NOT NULL,
+    mes     INTEGER NOT NULL,
+    tipo_id TEXT NOT NULL REFERENCES tipos_vasilhame (tipo_id),
+    cascos  INTEGER NOT NULL CHECK (cascos > 0),
+    PRIMARY KEY (periodo, tipo_id)
+);
+
+CREATE TABLE vasilhame_refugo (
+    periodo   TEXT NOT NULL,
+    ano       INTEGER NOT NULL,
+    mes       INTEGER NOT NULL,
+    tipo_id   TEXT NOT NULL REFERENCES tipos_vasilhame (tipo_id),
+    etapa_id  TEXT NOT NULL REFERENCES etapas_vasilhame (etapa_id),
+    motivo_id TEXT NOT NULL REFERENCES motivos_vasilhame (motivo_id),
+    cascos    INTEGER NOT NULL CHECK (cascos > 0),
+    PRIMARY KEY (periodo, tipo_id, etapa_id, motivo_id)
 );
 
 CREATE INDEX ix_avarias_periodo ON avarias (periodo);

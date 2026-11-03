@@ -28,6 +28,13 @@
   --pk-lata: #eb6834;
   --pk-barril: #1baf7a;
   --pk-outras: #eda100;
+  /* Vasilhames: 1L violeta, 600A âmbar, 600V verde-água, 300ml azul (ordem fixa; validada nos pares
+     vizinhos com CVD ΔE ≥ 9,1 no claro e 8,4 no escuro). Âmbar e verde ficam abaixo de 3:1 no claro:
+     por isso todo uso leva rótulo direto e a visão de tabela. */
+  --bt-1L: #6250d6;
+  --bt-600A: #eda100;
+  --bt-600V: #1baf7a;
+  --bt-300ml: #2a78d6;
   /* Série única (Pareto, custo mensal) e destaque de tendência. */
   --series-1: #2a78d6;
   --series-focus: #eb6834;
@@ -74,6 +81,10 @@
   --pk-lata: #d95926;
   --pk-barril: #199e70;
   --pk-outras: #c98500;
+  --bt-1L: #9085e9;
+  --bt-600A: #c98500;
+  --bt-600V: #199e70;
+  --bt-300ml: #3987e5;
   --series-1: #3987e5;
   --series-focus: #e8703e;
   --series-rest: #5a564c;
@@ -131,16 +142,14 @@ body {
   color: var(--brand-ink);
 }
 
-/* Lenis (smooth scroll) */
-html.lenis,
-html.lenis body {
-  height: auto;
+/* Rolagem nativa: âncoras deslizam e param abaixo do cabeçalho fixo. */
+html {
+  scroll-padding-top: 80px;
 }
-.lenis.lenis-smooth {
-  scroll-behavior: auto !important;
-}
-.lenis.lenis-stopped {
-  overflow: clip;
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 /* Fundo do hero: grade sutil que some nas bordas. */

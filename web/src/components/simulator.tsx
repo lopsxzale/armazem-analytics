@@ -152,7 +152,7 @@ export function Simulator() {
           </p>
         </div>
 
-        <ChartFrame title={t.simulator.chartTitle} subtitle={t.simulator.chartSubtitle}>
+        <ChartFrame title={t.simulator.chartTitle} subtitle={t.simulator.chartSubtitle} note={t.simulator.comment}>
           <div className="mb-4">
             <Legend
               items={[

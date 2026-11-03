@@ -47,6 +47,7 @@ def test_todos_os_arquivos_que_o_site_importa_existem(site):
         "abc",
         "real",
         "inventario",
+        "vasilhame",
         "simulador",
         "findings",
         "sensibilidade",

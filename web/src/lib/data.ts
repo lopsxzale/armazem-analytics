@@ -12,6 +12,7 @@ import sensJson from "@/data/sensibilidade.json";
 import simuladorJson from "@/data/simulador.json";
 import sqlJson from "@/data/sql.json";
 import tendenciaJson from "@/data/tendencia.json";
+import vasilhameJson from "@/data/vasilhame.json";
 
 export const PACKAGES = ["long_neck", "lata", "barril", "outras"] as const;
 export type Package = (typeof PACKAGES)[number];
@@ -203,7 +204,68 @@ export type Findings = {
   custo_medio_mensal_brl: number;
 };
 
-export type SqlId = "q1" | "q2" | "q3" | "q4" | "q5" | "q6" | "q7" | "q8" | "q9" | "q10" | "q11" | "q12";
+export type SqlId = "q1" | "q2" | "q3" | "q4" | "q5" | "q6" | "q7" | "q8" | "q9" | "q10" | "q11" | "q12" | "q13" | "q14";
+
+// Vasilhame retornável (camada 100% simulada)
+export const BOTTLES = ["1L", "600A", "600V", "300ml"] as const;
+export type Bottle = (typeof BOTTLES)[number];
+export const BOTTLE_REASONS = ["quebrada", "trincada", "sujidade_interna", "bicada_externa", "bicada_interna"] as const;
+export type BottleReason = (typeof BOTTLE_REASONS)[number];
+export const BOTTLE_STAGES = ["retorno_rota", "triagem", "armazenagem_vasilhame", "separacao_carregamento"] as const;
+export type BottleStage = (typeof BOTTLE_STAGES)[number];
+export type Bottles = {
+  tipos: {
+    tipo_id: Bottle;
+    ordem: number;
+    cascos_refugados: number;
+    cascos_tipo: number;
+    custo_brl: number;
+    taxa_pct: number;
+    pct_cascos: number;
+    pct_custo: number;
+    preco_casco_brl: number;
+  }[];
+  celulas: {
+    tipo_id: Bottle;
+    motivo_id: BottleReason;
+    cascos_refugados: number;
+    custo_brl: number;
+    taxa_pct: number;
+    pct_custo: number;
+  }[];
+  motivos: { motivo_id: BottleReason; cascos_refugados: number; pct: number }[];
+  etapas: { etapa_id: BottleStage; cascos_refugados: number; custo_brl: number; pct: number; pct_acum: number }[];
+  mensal: { periodo: string; cascos: number; cascos_refugados: number; custo_brl: number; taxa_pct: number }[];
+  premissas: {
+    cascos_mes: number;
+    taxa_base_refugo_pct: number;
+    meses: number;
+    periodo_inicio: string;
+    periodo_fim: string;
+    seed: number;
+  };
+  achados: {
+    refugados_mes: number;
+    custo_mes_brl: number;
+    cascos_mes: number;
+    taxa_pct: number;
+    pior_tipo: Bottle;
+    pior_taxa_pct: number;
+    pior_pct_cascos: number;
+    pior_pct_custo: number;
+    melhor_tipo: Bottle;
+    melhor_taxa_pct: number;
+    pior_vs_melhor: number;
+    top_motivo: BottleReason;
+    top_motivo_pct: number;
+    de_fora_pct: number;
+    interno_pct: number;
+    economia_interno_mes: number;
+    reducao_pct: number;
+    pico_periodo: string;
+    pico_refugados: number;
+  };
+};
 
 export type AbcClass = "A" | "B" | "C";
 export type Cause = "erro_separacao" | "erro_recebimento" | "avaria_nao_baixada";
@@ -280,3 +342,4 @@ export const sqlFiles = sqlJson as Record<SqlId, SqlFile>;
 export const real = realJson as Real;
 export const sensitivity = sensJson as Sensitivity;
 export const inventory = inventarioJson as Inventory;
+export const bottles = vasilhameJson as Bottles;

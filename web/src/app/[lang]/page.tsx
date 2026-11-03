@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { codeToHtml } from "shiki";
 import { AbcCharts } from "@/components/charts/abc-charts";
+import { BottleCharts } from "@/components/charts/bottle-charts";
 import { MonthlyChart } from "@/components/charts/monthly-chart";
 import { PackagingCharts } from "@/components/charts/packaging-charts";
 import { RealCharts } from "@/components/charts/real-charts";
@@ -13,12 +14,13 @@ import { Hero } from "@/components/hero";
 import { Providers, type HighlightedSql } from "@/components/providers";
 import { Section } from "@/components/section";
 import { Simulator } from "@/components/simulator";
+import { StageMap } from "@/components/stage-map";
 import { Summary } from "@/components/summary";
 import { hasLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n";
-import { abc, findings as fd, meta, pareto, real, sensitivity as sens, sqlFiles } from "@/lib/data";
+import { abc, bottles, findings as fd, meta, pareto, real, sensitivity as sens, sqlFiles } from "@/lib/data";
 import { fill, formatters } from "@/lib/format";
-import { comboLabel } from "@/lib/labels";
+import { bottleReasonLabel, bottleShort, comboLabel } from "@/lib/labels";
 
 // Destaque de sintaxe roda no build; o cliente recebe só o HTML pronto.
 async function highlightSql(): Promise<HighlightedSql> {
@@ -50,6 +52,7 @@ export default async function Page({ params }: PageProps<"/[lang]">) {
     sep: f.brl0(fd.acoes.economia_separacao_mes),
     glass: f.brl0(fd.acoes.economia_long_neck_mes),
   };
+  const b = bottles.achados;
 
   return (
     <Providers lang={lang} sql={sql}>
@@ -57,12 +60,13 @@ export default async function Page({ params }: PageProps<"/[lang]">) {
       <main>
         <Hero />
         <Summary />
+        <StageMap />
 
         <Section
           id="real"
           index="01"
           eyebrow={t.real.eyebrow}
-          title={t.real.title}
+          title={fill(t.real.title, { canStart: f.pp(real.lata_inicio_pct, 0), canEnd: f.pp(real.lata_fim_pct, 0) })}
           lede={fill(t.real.lede, {
             canStart: f.pp(real.lata_inicio_pct, 0),
             canEnd: f.pp(real.lata_fim_pct, 0),
@@ -70,6 +74,7 @@ export default async function Page({ params }: PageProps<"/[lang]">) {
             y1: real.ano_fim,
           })}
           takeaway={t.real.takeaway}
+          stat={{ value: real.lata_fim_pct, format: "pct0", label: fill(t.real.stat, { y1: real.ano_fim }) }}
         >
           <RealCharts months={meta.meses} />
         </Section>
@@ -78,13 +83,14 @@ export default async function Page({ params }: PageProps<"/[lang]">) {
           id="pareto"
           index="02"
           eyebrow={t.pareto.eyebrow}
-          title={t.pareto.title}
+          title={fill(t.pareto.title, { n80: pareto.combos_ate_80, total: pareto.total_combos })}
           lede={fill(t.pareto.lede, {
             n80: pareto.combos_ate_80,
             top: comboLabel(top.motivo_id, top.etapa_id, lang).toLowerCase(),
             topPct: f.pp(top.pct, 0),
           })}
           takeaway={t.pareto.takeaway}
+          stat={{ value: top.pct, format: "pct0", label: t.pareto.stat }}
         >
           <ParetoChart />
         </Section>
@@ -93,19 +99,45 @@ export default async function Page({ params }: PageProps<"/[lang]">) {
           id="packaging"
           index="03"
           eyebrow={t.packaging.eyebrow}
-          title={t.packaging.title}
+          title={fill(t.packaging.title, { glassVol: f.pp(a.long_neck_pct_volume, 0), glassCost: f.pp(a.long_neck_pct_custo, 0) })}
           lede={fill(t.packaging.lede, {
             glassVol: f.pp(a.long_neck_pct_volume, 0),
             glassCost: f.pp(a.long_neck_pct_custo, 0),
           })}
           takeaway={t.packaging.takeaway}
+          stat={{ value: a.long_neck_pct_custo, format: "pct0", label: t.packaging.stat }}
         >
           <PackagingCharts />
         </Section>
 
         <Section
-          id="monthly"
+          id="bottles"
           index="04"
+          eyebrow={t.bottles.eyebrow}
+          title={fill(t.bottles.title, { worst: bottleShort(b.pior_tipo), cost: f.pp(b.pior_pct_custo, 0) })}
+          lede={fill(t.bottles.lede, {
+            worst: bottleShort(b.pior_tipo),
+            outside: f.pp(b.de_fora_pct, 0),
+            reason: bottleReasonLabel(b.top_motivo, lang).toLowerCase(),
+            reasonPct: f.pp(b.top_motivo_pct, 0),
+          })}
+          takeaway={fill(t.bottles.takeaway, {
+            inside: f.pp(b.interno_pct, 0),
+            saving: f.brl0(b.economia_interno_mes),
+            pct: `${b.reducao_pct}%`,
+          })}
+          stat={{
+            value: b.refugados_mes,
+            format: "int",
+            label: fill(t.bottles.stat, { cost: f.brl0(b.custo_mes_brl), rate: f.pp(b.taxa_pct, 1) }),
+          }}
+        >
+          <BottleCharts />
+        </Section>
+
+        <Section
+          id="monthly"
+          index="05"
           eyebrow={t.monthly.eyebrow}
           title={fill(t.monthly.title, { monthly: f.brlCompact(meta.custo_medio_mensal_brl) })}
           lede={t.monthly.lede}
@@ -116,39 +148,41 @@ export default async function Page({ params }: PageProps<"/[lang]">) {
 
         <Section
           id="trend"
-          index="05"
+          index="06"
           eyebrow={t.trend.eyebrow}
-          title={t.trend.title}
+          title={fill(t.trend.title, { adj: f.spp(a.separacao_var_ajustada_pct, 0) })}
           lede={fill(t.trend.lede, {
             raw: f.spp(a.separacao_var_pct, 0),
             adj: f.spp(a.separacao_var_ajustada_pct, 0),
             planted: f.pp(a.tendencia_plantada_pct, 0),
           })}
           takeaway={t.trend.takeaway}
+          stat={{ value: a.separacao_var_ajustada_pct, format: "spp0", label: t.trend.stat }}
         >
           <TrendChart />
         </Section>
 
         <Section
           id="abc"
-          index="06"
+          index="07"
           eyebrow={t.abc.eyebrow}
-          title={t.abc.title}
+          title={fill(t.abc.title, { aItems: f.int(classA.itens), aCost: f.pp(classA.pct_custo, 0) })}
           lede={fill(t.abc.lede, {
             aItems: f.int(classA.itens),
             aVol: f.pp(classA.pct_volume, 0),
             aCost: f.pp(classA.pct_custo, 0),
           })}
           takeaway={t.abc.takeaway}
+          stat={{ value: classA.pct_custo, format: "pct0", label: fill(t.abc.stat, { n: f.int(classA.itens) }) }}
         >
           <AbcCharts />
         </Section>
 
         <Section
           id="robust"
-          index="07"
+          index="08"
           eyebrow={t.robust.eyebrow}
-          title={t.robust.title}
+          title={fill(t.robust.title, { glass: f.pp(a.long_neck_pct_custo, 0) })}
           lede={fill(t.robust.lede, {
             runs: sens.rodadas,
             m0: f.dec(sens.faixas_premissas.mult_long_neck.min, 1),
@@ -164,7 +198,7 @@ export default async function Page({ params }: PageProps<"/[lang]">) {
 
         <Section
           id="simulator"
-          index="08"
+          index="09"
           eyebrow={t.simulator.eyebrow}
           title={t.simulator.title}
           lede={t.simulator.lede}
@@ -175,7 +209,7 @@ export default async function Page({ params }: PageProps<"/[lang]">) {
 
         <Section
           id="actions"
-          index="09"
+          index="10"
           eyebrow={t.actions.eyebrow}
           title={t.actions.title}
           lede={fill(t.actions.lede, savings)}
@@ -183,7 +217,7 @@ export default async function Page({ params }: PageProps<"/[lang]">) {
           <Actions />
         </Section>
 
-        <Section id="method" index="10" eyebrow={t.method.eyebrow} title={t.method.title} lede={t.method.lede}>
+        <Section id="method" index="11" eyebrow={t.method.eyebrow} title={t.method.title} lede={t.method.lede}>
           <Method />
         </Section>
 

@@ -4,7 +4,8 @@ import { motion } from "motion/react";
 import { useState } from "react";
 import { matrix, PACKAGES, STAGES, type Package, type Stage } from "@/lib/data";
 import { packageColor, packageLabel, seqColor, stageLabel } from "@/lib/labels";
-import { ChartFrame } from "../chart-frame";
+import { fill } from "@/lib/format";
+import { ChartFrame, Details, SeqLegend } from "../chart-frame";
 import { useChartInView } from "../motion";
 import { useI18n } from "../providers";
 
@@ -15,9 +16,12 @@ function ShareBars() {
   const rows = PACKAGES.map((p) => matrix.embalagens.find((e) => e.embalagem_id === p)!);
 
   return (
-    <div ref={ref} className="space-y-5">
+    <div ref={ref}>
+      <div className="grid gap-x-10 gap-y-5 sm:grid-cols-2">
       {rows.map((r, i) => (
-        <div key={r.embalagem_id}>
+        <div
+          key={r.embalagem_id}
+        >
           <p className="mb-1.5 flex items-center gap-2 text-sm font-medium text-ink">
             <span aria-hidden className="size-2.5 rounded-[3px]" style={{ background: packageColor(r.embalagem_id) }} />
             {packageLabel(r.embalagem_id, lang)}
@@ -42,6 +46,7 @@ function ShareBars() {
           ))}
         </div>
       ))}
+      </div>
     </div>
   );
 }
@@ -105,18 +110,21 @@ function Heatmap() {
           ))}
         </tbody>
       </table>
+      <SeqLegend />
     </div>
   );
 }
 
 export function PackagingCharts() {
   const { lang, t, f } = useI18n();
+  const glass = matrix.embalagens.find((e) => e.embalagem_id === "long_neck")!;
 
   return (
-    <div className="grid gap-4 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
+    <div>
       <ChartFrame
         title={t.packaging.shareTitle}
         subtitle={t.packaging.shareSubtitle}
+        note={fill(t.packaging.note, { vol: f.pp(glass.pct_volume, 0), cost: f.pp(glass.pct_custo, 0) })}
         sqlId="q3"
         table={{
           columns: ["", t.packaging.volume, t.packaging.cost],
@@ -128,9 +136,11 @@ export function PackagingCharts() {
       >
         <ShareBars />
       </ChartFrame>
+      <Details label={t.packaging.heatTitle}>
       <ChartFrame
         title={t.packaging.heatTitle}
         subtitle={t.packaging.heatSubtitle}
+        note={t.packaging.heatComment}
         sqlId="q3"
         table={{
           columns: ["", ...STAGES.map((s) => stageLabel(s, lang))],
@@ -142,6 +152,7 @@ export function PackagingCharts() {
       >
         <Heatmap />
       </ChartFrame>
+      </Details>
     </div>
   );
 }

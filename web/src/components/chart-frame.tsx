@@ -4,6 +4,8 @@ import { AnimatePresence, motion } from "motion/react";
 import { useId, useState, type ReactNode } from "react";
 import type { SqlId } from "@/lib/data";
 import { useI18n, useSql } from "./providers";
+import { Note } from "./charts/annotation";
+import { Glossed } from "./glossary";
 
 export type LegendItem = { label: string; color: string; shape?: "square" | "dot" | "line" };
 
@@ -103,11 +105,14 @@ export function ChartFrame({
   legend,
   controls,
   table,
+  note,
   children,
   className = "",
 }: {
   title: string;
   subtitle?: string;
+  /** Comentário curto embaixo do gráfico: o que ele mostra e a conclusão. */
+  note?: string;
   sqlId?: SqlId;
   legend?: LegendItem[];
   controls?: ReactNode;
@@ -202,6 +207,11 @@ export function ChartFrame({
           </motion.div>
         )}
       </AnimatePresence>
+      {note && (
+        <Note className="mt-5 border-t border-line pt-4">
+          <Glossed text={note} />
+        </Note>
+      )}
     </figure>
   );
 }
@@ -239,6 +249,70 @@ export function TooltipRow({ value, label, color }: { value: string; label: stri
       {color && <span aria-hidden className="h-0.5 w-3 rounded-full" style={{ background: color }} />}
       <span className="font-semibold text-ink tabular">{value}</span>
       <span className="text-muted">{label}</span>
+    </div>
+  );
+}
+
+/** Bloco "Ver detalhes": guarda os gráficos de apoio para cada seção abrir com um número e um gráfico. */
+export function Details({ children, label }: { children: ReactNode; label?: string }) {
+  const { t } = useI18n();
+  const [open, setOpen] = useState(false);
+  const id = useId();
+
+  return (
+    <div className="mt-4">
+      <button
+        onClick={() => setOpen(!open)}
+        aria-expanded={open}
+        aria-controls={id}
+        className="group inline-flex items-center gap-2 rounded-full border border-line bg-surface px-4 py-2 text-sm font-medium text-ink-2 transition hover:bg-surface-2 hover:text-ink"
+      >
+        <motion.svg
+          width="14"
+          height="14"
+          viewBox="0 0 16 16"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.7"
+          aria-hidden
+          animate={{ rotate: open ? 45 : 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <path d="M8 3v10M3 8h10" strokeLinecap="round" />
+        </motion.svg>
+        {open ? t.ui.hideDetails : (label ?? t.ui.showDetails)}
+      </button>
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            id={id}
+            key="details"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className="overflow-hidden"
+          >
+            <div className="pt-4">{children}</div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+/** Régua do mapa de calor: os 6 passos da escala, da menor para a maior taxa. Vale nos dois temas. */
+export function SeqLegend() {
+  const { t } = useI18n();
+  return (
+    <div className="mt-4 flex items-center justify-end gap-2 text-[11px] text-muted" aria-hidden>
+      <span>{t.ui.seqLow}</span>
+      <span className="flex gap-[2px]">
+        {[0, 1, 2, 3, 4, 5].map((i) => (
+          <span key={i} className="h-3 w-6 first:rounded-l last:rounded-r" style={{ background: `var(--seq-${i})` }} />
+        ))}
+      </span>
+      <span>{t.ui.seqHigh}</span>
     </div>
   );
 }

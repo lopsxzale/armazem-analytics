@@ -33,7 +33,7 @@ EMBALAGENS = {
 # em: preposição + nome, para frases ("no carregamento").
 # participacao: parte da avaria que acontece em cada etapa (soma 1). (premissa)
 ETAPAS = {
-    "doca": {"nome": "Doca (recebimento)", "em": "na doca", "ordem": 1, "participacao": 0.15},
+    "doca": {"nome": "Descarga (recebimento)", "em": "na descarga", "ordem": 1, "participacao": 0.15},
     "armazenagem": {"nome": "Armazenagem", "em": "na armazenagem", "ordem": 2, "participacao": 0.20},
     "separacao": {"nome": "Separação (picking)", "em": "na separação", "ordem": 3, "participacao": 0.40},
     "carregamento": {"nome": "Carregamento", "em": "no carregamento", "ordem": 4, "participacao": 0.25},
@@ -115,3 +115,86 @@ CAUSAS = {
     "erro_recebimento": "Erro de recebimento",
     "avaria_nao_baixada": "Avaria não baixada",
 }
+
+# ---------------------------------------------------------------- vasilhame retornável (premissas)
+
+# Refugo de vasilhame: casco retornável que não dá para reaproveitar (volta para o fabricante como
+# caco). Os 4 tipos são os da operação: 1L (litrão), 600A (600 ml âmbar), 600V (600 ml verde) e
+# 300 ml (litrinho). Tudo aqui é premissa: troque pelos números do armazém quando houver.
+# O custo é só o do casco (reposição); o líquido de garrafa cheia que quebra já entra na avaria da v1.
+VASILHAME = {
+    # Cascos que passam pelo armazém num mês médio (retorno de rota + giro do estoque de vazio).
+    "cascos_mes": 180_000,
+    # Parte dos cascos que vira refugo, antes do multiplicador de cada tipo.
+    "taxa_base_refugo": 0.018,
+    # Sazonalidade do volume (mês -> fator): verão vende mais garrafa retornável.
+    "sazonalidade": {
+        1: 1.20,
+        2: 1.15,
+        3: 1.00,
+        4: 0.92,
+        5: 0.88,
+        6: 0.85,
+        7: 0.85,
+        8: 0.90,
+        9: 0.95,
+        10: 1.02,
+        11: 1.10,
+        12: 1.30,
+    },
+    # 12 meses simulados, terminando no último mês do dado real.
+    "periodo_fim": "2026-08",
+    "meses": 12,
+}
+
+# participacao: parte dos cascos de cada tipo (soma 1). preco_casco_brl: custo de repor um casco.
+# mult_refugo: quanto o tipo multiplica a taxa base. Informado pela operação: o 600A é o casco que mais
+# dá prejuízo (é o que mais gira e mais bate na grade); o litrinho é o mais robusto.
+TIPOS_VASILHAME = {
+    "1L": {"nome": "1L (litrão)", "ordem": 1, "participacao": 0.28, "preco_casco_brl": 2.30, "mult_refugo": 1.05},
+    "600A": {"nome": "600 ml âmbar", "ordem": 2, "participacao": 0.48, "preco_casco_brl": 1.45, "mult_refugo": 1.25},
+    "600V": {"nome": "600 ml verde", "ordem": 3, "participacao": 0.10, "preco_casco_brl": 1.65, "mult_refugo": 1.10},
+    "300ml": {
+        "nome": "300 ml (litrinho)",
+        "ordem": 4,
+        "participacao": 0.14,
+        "preco_casco_brl": 0.95,
+        "mult_refugo": 0.70,
+    },
+}
+
+# participacao: parte do refugo que aparece em cada etapa (soma 1).
+ETAPAS_VASILHAME = {
+    "retorno_rota": {"nome": "Retorno de rota", "ordem": 1, "participacao": 0.34},
+    "triagem": {"nome": "Triagem / conferência", "ordem": 2, "participacao": 0.30},
+    "armazenagem_vasilhame": {"nome": "Armazenagem do vasilhame", "ordem": 3, "participacao": 0.14},
+    "separacao_carregamento": {"nome": "Separação / carregamento", "ordem": 4, "participacao": 0.22},
+}
+
+MOTIVOS_VASILHAME = {
+    "quebrada": "Quebrada",
+    "trincada": "Trincada",
+    "sujidade_interna": "Sujidade interna",
+    "bicada_externa": "Bicada externa",
+    "bicada_interna": "Bicada interna",
+}
+
+# Peso de cada motivo por etapa (normalizado na simulação): o que chega quebrado/bicado do cliente
+# aparece no retorno; sujidade e bicada interna só se vê na triagem; no manuseio do armazém, quebra.
+PESO_MOTIVO_ETAPA_VASILHAME = {
+    "retorno_rota": {"quebrada": 3, "trincada": 2, "bicada_externa": 3, "bicada_interna": 1, "sujidade_interna": 1},
+    "triagem": {"sujidade_interna": 5, "bicada_interna": 3, "trincada": 2, "bicada_externa": 2},
+    "armazenagem_vasilhame": {"quebrada": 4, "trincada": 2, "bicada_externa": 2},
+    "separacao_carregamento": {"quebrada": 5, "trincada": 1, "bicada_externa": 1},
+}
+
+# Como o tipo desloca os motivos: 600A bica mais (bate na grade), litrão quebra mais (peso),
+# litrinho volta mais sujo (consumo em bar).
+PESO_MOTIVO_TIPO_VASILHAME = {
+    "1L": {"quebrada": 1.4, "trincada": 1.2},
+    "600A": {"bicada_externa": 1.3, "bicada_interna": 1.2},
+    "600V": {"bicada_externa": 1.3},
+    "300ml": {"sujidade_interna": 1.6, "quebrada": 0.6},
+}
+
+SEED_VASILHAME = SEED + 200
